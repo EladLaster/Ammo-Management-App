@@ -31,7 +31,7 @@ export function LoginPage() {
   });
 
   return (
-        <Paper radius="md" p="lg" withBorder style={{ width: 400, maxWidth: '90vw', background: '#222' }}>
+        <Paper radius="md" p="lg"  withBorder style={{ width: 400, maxWidth: '90vw', background: '#222' }}>
          <Flex direction="column" align="center" justify="center" mb="md">
             <Text size="lg" fw={500}>
                 ניהול תחמושת
