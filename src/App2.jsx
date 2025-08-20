@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import "./App.css";
-import { HomePageUser } from "./Lior/Pages/HomePageUser";
+import "./App2.css";
+import HomePageUser from "./Lior/Pages/HomePageUser";
 import { RequestsPageUser } from "./Lior/Pages/RequestsPageUser";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <>
       <h2>Lior</h2>
       <HomePageUser />
-      <RequestsPageUser/>
+      <RequestsPageUser />
     </>
   );
 }
