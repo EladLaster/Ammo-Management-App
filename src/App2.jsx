@@ -1,13 +1,14 @@
 import { useState } from 'react'
+
 import './App.css'
-import { LoginPage } from './Laster/LoginPage'
+import { HomePage } from './Lior/HomePage'
 
 function App() {
 
 return(
   <>
-    <h2>Laster</h2>
-    <LoginPage/>
+  <h2>Lior</h2>
+  <HomePage/>
   </>
   )
 }

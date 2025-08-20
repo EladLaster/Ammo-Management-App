@@ -1,13 +1,14 @@
 import { useState } from 'react'
+
 import './App.css'
-import { LoginPage } from './Laster/LoginPage'
+import { FormPage } from './Guy/FormPage'
 
 function App() {
 
 return(
   <>
-    <h2>Laster</h2>
-    <LoginPage/>
+  <h2>Guy</h2>
+  <FormPage/>
   </>
   )
 }
