@@ -1,38 +1,165 @@
 .inventoryContainer {
-    background-color: white;
-    display: flex;
-    flex-direction: column;   /* במקום row */
-    gap: 10px;                /* רווח בין header ל-body */
-    padding: 20px;            /* רווח פנימי */
-    border-radius: 10px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  direction: rtl;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .inventoryHeader {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between; /* הכותרת בצד שמאל, הכפתור בצד ימין */
-    align-items: center;            /* מיישר אנכית */
-}
-    
-.BTNrefresh {
-    background-color: #007bff; /* כחול מודרני */
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #f8f9fa;
 }
 
-.BTNrefresh:hover {
-    background-color: #0056b3; /* כחול כהה יותר בהובר */
+.inventoryHeader h2 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.inventoryBody {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* מרווח בין שורות מלאי */
-    padding-top: 10px;
+.searchInput {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 14px;
+  min-width: 200px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: #007bff;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 0 25px;
+  padding-top: 20px;
+}
+
+.actionBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.approveBtn {
+  background: #28a745;
+  color: white;
+}
+
+.approveBtn:hover {
+  background: #218838;
+}
+
+.rejectBtn {
+  background: #007bff;
+  color: white;
+}
+
+.rejectBtn:hover {
+  background: #0056b3;
+}
+
+.addBtn {
+  background: #17a2b8;
+  color: white;
+}
+
+.addBtn:hover {
+  background: #138496;
+}
+
+.inventoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.inventoryTable thead {
+  background: #f8f9fa;
+}
+
+.inventoryTable th {
+  padding: 15px 12px;
+  text-align: right;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 13px;
+}
+
+.inventoryTable td {
+  padding: 12px;
+  text-align: right;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.inventoryTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 5px;
+}
+
+.statusWaiting {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.statusApproved {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #00b894;
+}
+
+.statusRejected {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #e74c3c;
+}
+
+.priorityHigh {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.priorityMedium {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.priorityLow {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.unitNumber {
+  background: #e9ecef;
+  color: #495057;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
 }

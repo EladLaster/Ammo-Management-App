@@ -1,15 +1,14 @@
-import { Inventory } from "../components/Inventory";
 import { Status } from "../components/Status";
-import "./HomePageAdmin.css"
+import { Inventory } from "../components/Inventory";
+import "./HomePageAdmin.css";
 
-export function HomePageAdmin(){
-
-
-    return(
-        <>
-        <h1>Home Page Admin</h1>
-        <Status/>
-        <Inventory/>
-        </>
-    )
+export function HomePageAdmin() {
+  return (
+    <div className="homepageAdmin">
+      <div className="pageTitle">
+        <h1>דף הבית</h1>
+      </div>
+      <Status />
+    </div>
+  );
 }
