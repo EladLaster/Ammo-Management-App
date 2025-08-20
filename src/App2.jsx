@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import './App.css'
-import { HomePage } from './Lior/HomePage'
+import "./App.css";
+import { HomePage } from "./Lior/HomePage";
 
 function App() {
-
-return(
-  <>
-  <h2>Lior</h2>
-  <HomePage/>
-  </>
-  )
+  return (
+    <>
+      <h2>Lior</h2>
+      <h2>hay all </h2>
+      <HomePage />
+    </>
+  );
 }
 
-export default App
+export default App;
