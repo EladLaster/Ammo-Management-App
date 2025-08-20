@@ -10,7 +10,20 @@ import "@mantine/core/styles.css";
 
 createRoot(document.getElementById('root')).render(
 
-  <MantineProvider defaultColorScheme="dark" theme={{ primaryColor: "indigo", fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif", defaultRadius: "md",}}>
+<MantineProvider
+  defaultColorScheme="light"
+  theme={{
+    dir: "rtl",
+    primaryColor: "indigo",
+    fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
+    defaultRadius: "md",
+    colors: {
+      light: [
+        "#cccccc",
+        "#cccccc", 
+      ],
+    },
+  }}>
     <Notifications position="top-right" />
       <StrictMode>
         <BrowserRouter>
