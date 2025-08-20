@@ -1,0 +1,28 @@
+body {
+    background-color: gray;
+    
+}
+
+.boxContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center; /* מרכז את כל ה-boxים */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.box {
+    display: flex;
+    width: 300px;
+    height: 150px;
+    background-color: antiquewhite;
+    border-radius: 20px;
+    justify-content: center;  /* מרכז את הטקסט אופקית */
+    align-items: center;      /* מרכז את הטקסט אנכית */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* נראה יותר יפה */
+}
+
+h3 {
+    margin: 0; /* שלא יהיה רווח מיותר */
+}

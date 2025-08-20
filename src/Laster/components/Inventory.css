@@ -1,0 +1,38 @@
+.inventoryContainer {
+    background-color: white;
+    display: flex;
+    flex-direction: column;   /* במקום row */
+    gap: 10px;                /* רווח בין header ל-body */
+    padding: 20px;            /* רווח פנימי */
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.inventoryHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* הכותרת בצד שמאל, הכפתור בצד ימין */
+    align-items: center;            /* מיישר אנכית */
+}
+    
+.BTNrefresh {
+    background-color: #007bff; /* כחול מודרני */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.BTNrefresh:hover {
+    background-color: #0056b3; /* כחול כהה יותר בהובר */
+}
+
+.inventoryBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* מרווח בין שורות מלאי */
+    padding-top: 10px;
+}
