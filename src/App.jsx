@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import './App.css'
-import { LoginPage } from './Laster/LoginPage'
+import { HomePageAdmin } from "./Laster/Pages/HomePageAdmin";
+import { RequestsPageAdmin } from "./Laster/Pages/RequestsPageAdmin";
 
 function App() {
 
-return(
+return (
   <>
     <h2>Laster</h2>
-    <LoginPage/>
+    <HomePageAdmin />
+    <RequestsPageAdmin />
   </>
-  )
+);
 }
 
 export default App

@@ -1,14 +1,15 @@
 import { useState } from "react";
 
 import "./App.css";
-import { HomePage } from "./Lior/HomePage";
+import { HomePageUser } from "./Lior/Pages/HomePageUser";
+import { RequestsPageUser } from "./Lior/Pages/RequestsPageUser";
 
 function App() {
   return (
     <>
       <h2>Lior</h2>
-      <h2>hay all </h2>
-      <HomePage />
+      <HomePageUser />
+      <RequestsPageUser/>
     </>
   );
 }
