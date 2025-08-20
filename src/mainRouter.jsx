@@ -11,7 +11,6 @@ export default function MainRouter() {
         <NavLink to="/Laster">Laster</NavLink> |{' '}
         <NavLink to="/Lior">Lior</NavLink> |{' '}
         <NavLink to="/Guy">Guy</NavLink>
- 
       </nav>
 
       <Routes>
