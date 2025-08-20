@@ -9,7 +9,7 @@ function App() {
     <>
       <h2>Lior</h2>
       <HomePageUser />
-      <RequestsPageUser />
+      {/* <RequestsPageUser /> */}
     </>
   );
 }
