@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { observer } from "mobx-react-lite";
 import InventoryTable from "../components/InventoryTable";
+import MyRequests from "../components/MyRequests";
 import { stockStore } from "../stores";
 
 // Minimal home page: button (no navigation yet) + inventory table,
@@ -39,7 +40,7 @@ const HomePageUser = observer(function HomePageUser() {
         <Button onClick={handleNewRequestClick}>בקשה חדשה</Button>
       </Group>
 
-      <Card withBorder radius="md" p="md">
+      <Card withBorder radius="md" p="md" mb="xl">
         <Title order={4} mb="sm">
           המלאי שלי ביחידה
         </Title>
@@ -64,9 +65,15 @@ const HomePageUser = observer(function HomePageUser() {
         )}
 
         {/* Table */}
-        {!isLoading && !error && myInventory && myInventory.length > 0 && (
-          <InventoryTable items={myInventory} />
-        )}
+        <InventoryTable />
+      </Card>
+
+      {/* בקשות שלי */}
+      <Card withBorder radius="md" p="md">
+        <Title order={4} mb="sm">
+          הבקשות שלי
+        </Title>
+        <MyRequests userId={1} />
       </Card>
     </Container>
   );
