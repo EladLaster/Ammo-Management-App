@@ -29,6 +29,7 @@ const HomePageUser = observer(function HomePageUser() {
     console.log("New Request clicked");
   };
 
+  // Get state from store
   const { isLoading, error, myInventory } = stockStore;
 
   return (
@@ -64,7 +65,7 @@ const HomePageUser = observer(function HomePageUser() {
 
         {/* Table */}
         {!isLoading && !error && myInventory && myInventory.length > 0 && (
-          <InventoryTable rows={myInventory} />
+          <InventoryTable items={myInventory} />
         )}
       </Card>
     </Container>

@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-import { inventoryMock } from "../components/inventory";
+import { fetchInventory } from "../services/inventoryService";
 
 class StockStore {
   inventory = [];
@@ -31,18 +31,17 @@ class StockStore {
     }
   }
 
-  load() {
+  async load() {
     this.isLoading = true;
     this.error = null;
-    setTimeout(() => {
-      try {
-        this.setInventory(inventoryMock);
-        this.isLoading = false;
-      } catch (e) {
-        this.error = "Failed to load inventory";
-        this.isLoading = false;
-      }
-    }, 700); // סימולציית טעינה
+    try {
+      const data = await fetchInventory();
+      this.setInventory(data);
+    } catch (e) {
+      this.error = "Failed to load inventory";
+    } finally {
+      this.isLoading = false;
+    }
   }
 }
 
