@@ -34,15 +34,20 @@ const LoginPage = observer(() =>
   });
 
   return (
-        <Paper radius="md" p="lg"  withBorder style={{ width: 400, maxWidth: '90vw', background: '#222' }}>
-         <Flex direction="column" align="center" justify="center" mb="md">
-            <Text size="lg" fw={500}>
-                ניהול תחמושת
-            </Text>
-            <Text size="sm" fw={300}>
-                מערכת צה"ל לניהול מלאי
-            </Text>
-          </Flex>
+    <Paper
+      radius="md"
+      p="lg"
+      withBorder
+      style={{ width: 400, maxWidth: "90vw", background: "#222" }}
+    >
+      <Flex direction="column" align="center" justify="center" mb="md">
+        <Text size="lg" fw={500}>
+          ניהול תחמושת
+        </Text>
+        <Text size="sm" fw={300}>
+          מערכת צה"ל לניהול מלאי
+        </Text>
+      </Flex>
 
 
       <Divider label={`Enter ${type} information`} labelPosition="center" my="lg" />
@@ -74,35 +79,48 @@ const LoginPage = observer(() =>
             style={{ width: '100%' }}
           />
 
-          <PasswordInput
-            required
-            label="סיסמה"
-            placeholder="הכנס סיסמה"
-            value={form.values.password}
-            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
-            radius="md"
-            mb="md"
-          />
-        
-          {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+            <PasswordInput
+              required
+              label="סיסמה"
+              placeholder="הכנס סיסמה"
+              value={form.values.password}
+              onChange={(event) =>
+                form.setFieldValue("password", event.currentTarget.value)
+              }
+              error={
+                form.errors.password &&
+                "Password should include at least 6 characters"
+              }
+              radius="md"
+              mb="md"
             />
-          )}
+
+            {type === "register" && (
+              <Checkbox
+                label="I accept terms and conditions"
+                checked={form.values.terms}
+                onChange={(event) =>
+                  form.setFieldValue("terms", event.currentTarget.checked)
+                }
+              />
+            )}
           </div>
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
-            {type === 'register'
-              ? 'כבר יש לך משתמש ? התחבר'
+          <Anchor
+            component="button"
+            type="button"
+            c="dimmed"
+            onClick={() => toggle()}
+            size="xs"
+          >
+            {type === "register"
+              ? "כבר יש לך משתמש ? התחבר"
               : "אין לך חשבון ? הרשם"}
           </Anchor>
           <Button text="התחבר" type="submit" radius="xl">
-              {type === 'register' ? 'Register' : 'התחבר'}
+            {type === "register" ? "Register" : "התחבר"}
           </Button>
         </Group>
       </form>
