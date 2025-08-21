@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import "dayjs/locale/he"; // optional if you want Hebrew locale
+import "dayjs/locale/he";
 
 export function FormPage() {
   const form = useForm({
