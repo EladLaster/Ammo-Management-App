@@ -55,8 +55,8 @@ export const Inventory = observer(() => {
       </div>
 
       <div className="actionButtons">
-        <button className="actionBtn approveBtn">✓ אישור בקשה</button>
-        <button className="actionBtn rejectBtn">📋 דו"ח מלאי </button>
+        <button className="actionBtn approveBtn">אישור בקשה</button>
+        <button className="actionBtn rejectBtn">דחיית בקשה</button>
         <button className="actionBtn addBtn">+ בקשה חדשה</button>
       </div>
 
@@ -64,12 +64,13 @@ export const Inventory = observer(() => {
         <thead>
           <tr>
             <th>תאריך בקשה</th>
-            <th>מספר חטיבה</th>
-            <th>שם פלוגה</th>
+            <th>מספר אימון</th>
             <th>סטטוס בקשה</th>
-            <th>סוג תחמושת</th>
             <th>כמות מבוקשת</th>
-            <th>עדיפות</th>
+            <th>יחידה בקשה</th>
+            <th>בעלות הסכמות</th>
+            <th>עדיפות קישות</th>
+            <th>סוג התקנות</th>
           </tr>
         </thead>
         <tbody>
@@ -77,19 +78,19 @@ export const Inventory = observer(() => {
             <tr key={idx}>
               <td>{r.requestDate}</td>
               <td>
-                <span className="unitNumber"> גדוד {r.unitNumber}</span>
+                <span className="unitNumber">מטוס {r.unitNumber}</span>
               </td>
-              <td>{r.requester}</td>
               <td>{getStatusBadge(r.status)}</td>
-              <td>{r.ammoType}</td>
               <td>{r.quantity}</td>
+              <td>{r.ammoType}</td>
+              <td>{r.quantity * (r.priority === "גבוהה" ? 12 : r.priority === "בינונית" ? 8 : 5)}</td>
               <td className={getPriorityClass(r.priority)}>
                 {r.priority === "גבוהה" && "🔴"} 
                 {r.priority === "בינונית" && "🟡"}
                 {r.priority === "נמוכה" && "🟢"}
                 {r.priority}
               </td>
-              
+              <td>{r.requester}</td>
             </tr>
           ))}
         </tbody>
