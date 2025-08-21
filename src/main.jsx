@@ -26,10 +26,10 @@ createRoot(document.getElementById('root')).render(
   }}>
     <Notifications position="top-right" />
       <StrictMode>
-        {/* <BrowserRouter> */}
+        <BrowserRouter>
           {/* <MainRouter /> */}
           <App/>
-        {/* </BrowserRouter> */}
+        </BrowserRouter>
       </StrictMode>
   </MantineProvider>
 );
