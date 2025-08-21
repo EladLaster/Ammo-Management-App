@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchInventory } from "../services/inventoryService";
+import { supabase } from "../services/inventoryService";
 
 function InventoryTable() {
   const [items, setItems] = useState([]);
@@ -11,7 +11,12 @@ function InventoryTable() {
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchInventory();
+        const { data, error } = await supabase
+          .from("inventory")
+          .select(
+            `unit_id, item_id, quantity, last_updated, items (item_name, category), units (name)`
+          );
+        if (error) throw error;
         setItems(data);
       } catch (e) {
         setError(e.message || e);
@@ -41,6 +46,7 @@ function InventoryTable() {
         <tr>
           <th style={{ border: "1px solid #ccc", padding: 8 }}>שם פריט</th>
           <th style={{ border: "1px solid #ccc", padding: 8 }}>קטגוריה</th>
+          <th style={{ border: "1px solid #ccc", padding: 8 }}>יחידה</th>
           <th style={{ border: "1px solid #ccc", padding: 8 }}>כמות</th>
           <th style={{ border: "1px solid #ccc", padding: 8 }}>מזהה פריט</th>
           <th style={{ border: "1px solid #ccc", padding: 8 }}>
@@ -50,22 +56,25 @@ function InventoryTable() {
       </thead>
       <tbody>
         {items.map((item) => (
-          <tr key={item.id || item.item_id}>
+          <tr key={item.unit_id + "-" + item.item_id}>
             <td style={{ border: "1px solid #ccc", padding: 8 }}>
-              {item.products?.name}
+              {item.items?.item_name}
             </td>
             <td style={{ border: "1px solid #ccc", padding: 8 }}>
-              {item.products?.product_categories?.name || ""}
+              {item.items?.category || ""}
+            </td>
+            <td style={{ border: "1px solid #ccc", padding: 8 }}>
+              {item.units?.name || ""}
             </td>
             <td style={{ border: "1px solid #ccc", padding: 8 }}>
               {item.quantity}
             </td>
             <td style={{ border: "1px solid #ccc", padding: 8 }}>
-              {item.id || item.item_id}
+              {item.item_id}
             </td>
             <td style={{ border: "1px solid #ccc", padding: 8 }}>
-              {item.updated_at
-                ? new Date(item.updated_at).toLocaleString()
+              {item.last_updated
+                ? new Date(item.last_updated).toLocaleString()
                 : ""}
             </td>
           </tr>
