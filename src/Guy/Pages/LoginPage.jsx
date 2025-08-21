@@ -13,19 +13,22 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
+import {observer} from 'mobx-react-lite'
+import {authProvider} from '../../../AuthProvider/AuthProvider'
 
-export function LoginPage() {
+const LoginPage = observer(() =>
+{
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
-      email: '',
+      userName: '',
       name: '',
       password: '',
       terms: false,
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      userName: (val) => (val.length <= 6 ? 'Invalid userName, should include at least 6 characters' : null),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
@@ -44,7 +47,10 @@ export function LoginPage() {
 
       <Divider label={`Enter ${type} information`} labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => {
+        authProvider.handleSignUp(form.values.userName, form.values.password)        
+    
+      })}>
         <Stack>
         <div dir="rtl">
 
@@ -61,9 +67,9 @@ export function LoginPage() {
             required
             label="שם משתמש או מספר אישי"
             placeholder="הכנס שם משתמש או מספר אישי"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
+            value={form.values.userName}
+            onChange={(event) => form.setFieldValue('userName', event.currentTarget.value)}
+            error={form.errors.userName && 'Invalid userName'}
             radius="md"
             style={{ width: '100%' }}
           />
@@ -102,4 +108,6 @@ export function LoginPage() {
       </form>
     </Paper>
   );
-}
+})
+
+export {LoginPage};

@@ -10,19 +10,13 @@ import './App3.css'
 function App() {
 
 return(
-  <>
-    {/* <MantineProvider defaultColorScheme="dark" theme={{ primaryColor: "indigo", fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif", defaultRadius: "md",}}>
-          <Notifications position="top-right" /> */}
-          <div className="container">
-            <h2>Guy</h2>
-            <div className="build">
-            <FormPage/>
-            <LoginPage/>
-            </div>
-          </div>
-    {/* </MantineProvider> */}
-  </>
+      <div className="container">
+        <div className="build">
+          <FormPage/>
+          <LoginPage/>
+        </div>
+      </div>
   )
 }
 
-export default App
+export default App;
