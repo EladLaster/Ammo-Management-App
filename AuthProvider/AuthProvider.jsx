@@ -85,6 +85,10 @@ class AuthProvider
         }
     }
 
+    getActiveUser(){
+      return this.activeUser;
+    }
+
 }
 
 export const authProvider = new AuthProvider();

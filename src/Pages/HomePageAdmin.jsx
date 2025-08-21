@@ -1,5 +1,4 @@
 import { Status } from "../components/Status";
-import { Inventory } from "../components/Inventory";
 import "./HomePageAdmin.css";
 
 export function HomePageAdmin() {

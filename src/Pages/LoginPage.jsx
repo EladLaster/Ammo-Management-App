@@ -14,7 +14,7 @@ import {
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
 import {observer} from 'mobx-react-lite'
-import {authProvider} from '../../../AuthProvider/AuthProvider'
+import {authProvider} from '../../AuthProvider/AuthProvider'
 
 const LoginPage = observer(() =>
 {

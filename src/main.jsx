@@ -2,10 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import MainRouter from './mainRouter.jsx'; 
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.css";
+import App from './App.jsx';
 
 
 createRoot(document.getElementById('root')).render(
@@ -27,7 +27,8 @@ createRoot(document.getElementById('root')).render(
     <Notifications position="top-right" />
       <StrictMode>
         <BrowserRouter>
-          <MainRouter />
+          {/* <MainRouter /> */}
+          <App/>
         </BrowserRouter>
       </StrictMode>
   </MantineProvider>

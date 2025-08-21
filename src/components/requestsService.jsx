@@ -1,5 +1,5 @@
 // src/services/requestsService.js
-import { supabase } from "../../Lior/services/inventoryService";
+import { supabase } from "../services/inventoryService";
 
 
 export async function fetchRequests() {

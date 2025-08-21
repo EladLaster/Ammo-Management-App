@@ -1,6 +1,6 @@
 // src/stores/RequestStore.js
 import { makeAutoObservable } from "mobx";
-import stockStore from "../../Lior/stores/stockStore";
+import stockStore from "../stores/stockStore";
 import { fetchRequests, updateRequestStatus, createRequest } from "./requestsService";
 
 class RequestStore {
