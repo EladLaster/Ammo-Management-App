@@ -13,15 +13,16 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export async function fetchInventory() {
   const { data, error } = await supabase.from("inventory").select(`
-      id,
+      unit_id,
+      item_id,
       quantity,
-      product_id,
-      products (
-        name,
-        category_id,
-        product_categories (
-          name
-        )
+      last_updated,
+      items (
+        item_name,
+        category
+      ),
+      units (
+        name
       )
     `);
   if (error) throw error;

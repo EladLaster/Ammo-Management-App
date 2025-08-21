@@ -65,12 +65,12 @@
 }
 
 .rejectBtn {
-  background: #007bff;
+  background: rgb(225, 79, 79);
   color: white;
 }
 
 .rejectBtn:hover {
-  background: #0056b3;
+  background: rgb(134, 60, 60);
 }
 
 .addBtn {
@@ -155,11 +155,73 @@
   font-weight: 600;
 }
 
-.unitNumber {
-  background: #e9ecef;
-  color: #495057;
-  padding: 2px 8px;
-  border-radius: 4px;
+/* Loading and No Data States */
+.loadingMessage {
+  text-align: center;
+  padding: 40px;
+  color: #007bff;
+  font-size: 16px;
+}
+
+.noDataCell {
+  text-align: center !important;
+  padding: 40px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Action Buttons in Cells */
+.actionBtnsCell {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.miniBtn {
+  padding: 4px 8px;
   font-size: 12px;
-  font-weight: 500;
+  border-radius: 3px;
+  min-width: 24px;
+  height: 24px;
+}
+
+.statusText {
+  color: #6c757d;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Unit Information */
+.unitLocation {
+  font-size: 11px;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+/* Status Badge Updates */
+.statusCompleted {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .inventoryTable {
+    font-size: 12px;
+  }
+  
+  .inventoryTable th,
+  .inventoryTable td {
+    padding: 8px 4px;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .searchInput {
+    min-width: 150px;
+  }
 }
