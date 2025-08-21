@@ -2,7 +2,6 @@ import {
   Anchor,
   Button,
   Flex,
-  Checkbox,
   Divider,
   Group,
   Paper,
@@ -10,39 +9,73 @@ import {
   Stack,
   Text,
   TextInput,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { upperFirst, useToggle } from '@mantine/hooks';
-import {observer} from 'mobx-react-lite'
-import {authProvider} from '../../AuthProvider/AuthProvider'
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useToggle } from "@mantine/hooks";
+import { observer } from "mobx-react-lite";
+import { authProvider } from "../../AuthProvider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
-const LoginPage = observer(() =>
-{
-  const [type, toggle] = useToggle(['login', 'register']);
+const LoginPage = observer(() => {
+  const navigate = useNavigate();
+  const [type, toggle] = useToggle(["login", "register"]);
+
   const form = useForm({
     initialValues: {
-      userName: '',
-      name: '',
-      password: '',
-      terms: false,
-      unitNumber: '',
-      role: '',
-      location: '',
+      userName: "",
+      name: "",
+      password: "",
+      unitNumber: "",
+      role: "",
+      location: "",
     },
-
     validate: {
-      userName: (val) => (val.length <= 6 ? 'Invalid userName, should include at least 6 characters' : null),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-      // אפשר להוסיף ולידציה לשדות החדשים אם תרצה
+      userName: (val) =>
+        val.length < 6 ? "שם משתמש חייב להיות מעל 6 תווים" : null,
+      password: (val) =>
+        val.length < 6 ? "סיסמה חייבת להיות מעל 6 תווים" : null,
     },
   });
+
+  const handleSubmit = async (values) => {
+    if (type === "login") {
+      const user = await authProvider.handleSignIn(
+        values.userName,
+        values.password
+      );
+
+      if (user) {
+        if (user.role === "Admin") navigate("/home-admin");
+        else if (user.role === "User") navigate("/home-user");
+        else alert("אין הרשאה מתאימה");
+      } else {
+        alert("שם משתמש או סיסמה שגויים");
+      }
+    } else {
+      const success = await authProvider.handleSignUp(
+        values.userName,
+        values.password,
+        values.name,
+        values.unitNumber,
+        values.role,
+        values.location
+      );
+
+      if (success) {
+        alert("הרשמה בוצעה בהצלחה! התחבר עכשיו");
+        toggle(); // לעבור ל-login
+      } else {
+        alert("שגיאה בהרשמה");
+      }
+    }
+  };
 
   return (
     <Paper
       radius="md"
       p="lg"
       withBorder
-      style={{ width: 420, maxWidth: "98vw", background: "#222" }} // הגדלתי מעט את הרוחב
+      style={{ width: 420, maxWidth: "98vw", background: "#222" }}
     >
       <Flex direction="column" align="center" justify="center" mb="md">
         <Text size="lg" fw={500}>
@@ -53,19 +86,13 @@ const LoginPage = observer(() =>
         </Text>
       </Flex>
 
-      <Divider label={`Enter ${type} information`} labelPosition="center" my="lg" />
+      <Divider
+        label={`Enter ${type} information`}
+        labelPosition="center"
+        my="lg"
+      />
 
-      <form onSubmit={form.onSubmit(() => {
-        if(type === 'login') authProvider.handleSignIn(form.values.userName, form.values.password)        
-        else authProvider.handleSignUp(
-          form.values.userName,
-          form.values.password,
-          form.values.name,
-          form.values.unitNumber,
-          form.values.role,
-          form.values.location
-        )
-      })}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <div dir="rtl">
             <TextInput
@@ -73,10 +100,12 @@ const LoginPage = observer(() =>
               label="שם משתמש או מספר אישי"
               placeholder="הכנס שם משתמש או מספר אישי"
               value={form.values.userName}
-              onChange={(event) => form.setFieldValue('userName', event.currentTarget.value)}
-              error={form.errors.userName && 'Invalid userName'}
+              onChange={(event) =>
+                form.setFieldValue("userName", event.currentTarget.value)
+              }
+              error={form.errors.userName}
               radius="md"
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             />
 
             <PasswordInput
@@ -87,51 +116,55 @@ const LoginPage = observer(() =>
               onChange={(event) =>
                 form.setFieldValue("password", event.currentTarget.value)
               }
-              error={
-                form.errors.password &&
-                "Password should include at least 6 characters"
-              }
+              error={form.errors.password}
               radius="md"
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
             />
 
-            {type === 'register' && (
+            {type === "register" && (
               <>
                 <TextInput
                   label="שמך"
                   placeholder="השם שלך"
                   value={form.values.name}
-                  onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                  onChange={(event) =>
+                    form.setFieldValue("name", event.currentTarget.value)
+                  }
                   radius="md"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
                 <TextInput
                   label="מספר יחידה"
                   placeholder="הכנס מספר יחידה"
                   value={form.values.unitNumber}
-                  onChange={(event) => form.setFieldValue('unitNumber', event.currentTarget.value)}
+                  onChange={(event) =>
+                    form.setFieldValue("unitNumber", event.currentTarget.value)
+                  }
                   radius="md"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
                 <TextInput
                   label="תפקיד"
                   placeholder="הכנס תפקיד"
                   value={form.values.role}
-                  onChange={(event) => form.setFieldValue('role', event.currentTarget.value)}
+                  onChange={(event) =>
+                    form.setFieldValue("role", event.currentTarget.value)
+                  }
                   radius="md"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
                 <TextInput
                   label="מיקום"
                   placeholder="הכנס מיקום"
                   value={form.values.location}
-                  onChange={(event) => form.setFieldValue('location', event.currentTarget.value)}
+                  onChange={(event) =>
+                    form.setFieldValue("location", event.currentTarget.value)
+                  }
                   radius="md"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
               </>
             )}
-
           </div>
         </Stack>
 
@@ -144,9 +177,10 @@ const LoginPage = observer(() =>
             size="xs"
           >
             {type === "register"
-              ? "כבר יש לך משתמש ? התחבר"
-              : "אין לך חשבון ? הרשם"}
+              ? "כבר יש לך משתמש? התחבר"
+              : "אין לך חשבון? הרשם"}
           </Anchor>
+
           <Button type="submit" radius="xl">
             {type === "register" ? "Register" : "התחבר"}
           </Button>
@@ -154,5 +188,6 @@ const LoginPage = observer(() =>
       </form>
     </Paper>
   );
-})
-export {LoginPage};
+});
+
+export { LoginPage };
