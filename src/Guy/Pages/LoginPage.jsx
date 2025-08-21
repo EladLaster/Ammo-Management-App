@@ -25,11 +25,15 @@ const LoginPage = observer(() =>
       name: '',
       password: '',
       terms: false,
+      unitNumber: '',
+      role: '',
+      location: '',
     },
 
     validate: {
       userName: (val) => (val.length <= 6 ? 'Invalid userName, should include at least 6 characters' : null),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      // אפשר להוסיף ולידציה לשדות החדשים אם תרצה
     },
   });
 
@@ -38,7 +42,7 @@ const LoginPage = observer(() =>
       radius="md"
       p="lg"
       withBorder
-      style={{ width: 400, maxWidth: "90vw", background: "#222" }}
+      style={{ width: 420, maxWidth: "98vw", background: "#222" }} // הגדלתי מעט את הרוחב
     >
       <Flex direction="column" align="center" justify="center" mb="md">
         <Text size="lg" fw={500}>
@@ -49,35 +53,31 @@ const LoginPage = observer(() =>
         </Text>
       </Flex>
 
-
       <Divider label={`Enter ${type} information`} labelPosition="center" my="lg" />
 
       <form onSubmit={form.onSubmit(() => {
-        authProvider.handleSignUp(form.values.userName, form.values.password)        
-    
+        if(type === 'login') authProvider.handleSignIn(form.values.userName, form.values.password)        
+        else authProvider.handleSignUp(
+          form.values.userName,
+          form.values.password,
+          form.values.name,
+          form.values.unitNumber,
+          form.values.role,
+          form.values.location
+        )
       })}>
         <Stack>
-        <div dir="rtl">
-
-          {type === 'register' && (
+          <div dir="rtl">
             <TextInput
-              label="שמך"
-              placeholder="השם שלך"
-              value={form.values.name}
-              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+              required
+              label="שם משתמש או מספר אישי"
+              placeholder="הכנס שם משתמש או מספר אישי"
+              value={form.values.userName}
+              onChange={(event) => form.setFieldValue('userName', event.currentTarget.value)}
+              error={form.errors.userName && 'Invalid userName'}
               radius="md"
+              style={{ width: '100%' }}
             />
-          )}
-          <TextInput
-            required
-            label="שם משתמש או מספר אישי"
-            placeholder="הכנס שם משתמש או מספר אישי"
-            value={form.values.userName}
-            onChange={(event) => form.setFieldValue('userName', event.currentTarget.value)}
-            error={form.errors.userName && 'Invalid userName'}
-            radius="md"
-            style={{ width: '100%' }}
-          />
 
             <PasswordInput
               required
@@ -92,18 +92,46 @@ const LoginPage = observer(() =>
                 "Password should include at least 6 characters"
               }
               radius="md"
-              mb="md"
+              style={{ width: '100%' }}
             />
 
-            {type === "register" && (
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) =>
-                  form.setFieldValue("terms", event.currentTarget.checked)
-                }
-              />
+            {type === 'register' && (
+              <>
+                <TextInput
+                  label="שמך"
+                  placeholder="השם שלך"
+                  value={form.values.name}
+                  onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                  radius="md"
+                  style={{ width: '100%' }}
+                />
+                <TextInput
+                  label="מספר יחידה"
+                  placeholder="הכנס מספר יחידה"
+                  value={form.values.unitNumber}
+                  onChange={(event) => form.setFieldValue('unitNumber', event.currentTarget.value)}
+                  radius="md"
+                  style={{ width: '100%' }}
+                />
+                <TextInput
+                  label="תפקיד"
+                  placeholder="הכנס תפקיד"
+                  value={form.values.role}
+                  onChange={(event) => form.setFieldValue('role', event.currentTarget.value)}
+                  radius="md"
+                  style={{ width: '100%' }}
+                />
+                <TextInput
+                  label="מיקום"
+                  placeholder="הכנס מיקום"
+                  value={form.values.location}
+                  onChange={(event) => form.setFieldValue('location', event.currentTarget.value)}
+                  radius="md"
+                  style={{ width: '100%' }}
+                />
+              </>
             )}
+
           </div>
         </Stack>
 
@@ -119,7 +147,7 @@ const LoginPage = observer(() =>
               ? "כבר יש לך משתמש ? התחבר"
               : "אין לך חשבון ? הרשם"}
           </Anchor>
-          <Button text="התחבר" type="submit" radius="xl">
+          <Button type="submit" radius="xl">
             {type === "register" ? "Register" : "התחבר"}
           </Button>
         </Group>
@@ -127,5 +155,4 @@ const LoginPage = observer(() =>
     </Paper>
   );
 })
-
 export {LoginPage};

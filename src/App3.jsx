@@ -11,10 +11,8 @@ function App() {
 
 return(
       <div className="container">
-        <div className="build">
           <FormPage/>
           <LoginPage/>
-        </div>
       </div>
   )
 }
