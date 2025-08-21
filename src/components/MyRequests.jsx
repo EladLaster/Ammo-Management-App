@@ -11,12 +11,17 @@ function MyRequests({ userId }) {
       setLoading(true);
       setError(null);
       try {
+        if (!userId) {
+          setRequests([]);
+          setLoading(false);
+          return;
+        }
         const { data, error } = await supabase
           .from("requests")
           .select(
             `id, quantity, status, created_at, last_updated, items (item_name)`
           )
-          .eq("user_id", userId || 1);
+          .eq("user_id", userId);
         if (error) throw error;
         setRequests(data);
       } catch (e) {
