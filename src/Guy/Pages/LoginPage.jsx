@@ -10,93 +10,120 @@ import {
   Stack,
   Text,
   TextInput,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { upperFirst, useToggle } from '@mantine/hooks';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { upperFirst, useToggle } from "@mantine/hooks";
 
 export function LoginPage() {
-  const [type, toggle] = useToggle(['login', 'register']);
+  const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
-      email: '',
-      name: '',
-      password: '',
+      email: "",
+      name: "",
+      password: "",
       terms: false,
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
+      password: (val) =>
+        val.length <= 6
+          ? "Password should include at least 6 characters"
+          : null,
     },
   });
 
   return (
-        <Paper radius="md" p="lg"  withBorder style={{ width: 400, maxWidth: '90vw', background: '#222' }}>
-         <Flex direction="column" align="center" justify="center" mb="md">
-            <Text size="lg" fw={500}>
-                ניהול תחמושת
-            </Text>
-            <Text size="sm" fw={300}>
-                מערכת צה"ל לניהול מלאי
-            </Text>
-          </Flex>
+    <Paper
+      radius="md"
+      p="lg"
+      withBorder
+      style={{ width: 400, maxWidth: "90vw", background: "#222" }}
+    >
+      <Flex direction="column" align="center" justify="center" mb="md">
+        <Text size="lg" fw={500}>
+          ניהול תחמושת
+        </Text>
+        <Text size="sm" fw={300}>
+          מערכת צה"ל לניהול מלאי
+        </Text>
+      </Flex>
 
-
-      <Divider label={`Enter ${type} information`} labelPosition="center" my="lg" />
+      <Divider
+        label={`Enter ${type} information`}
+        labelPosition="center"
+        my="lg"
+      />
 
       <form onSubmit={form.onSubmit(() => {})}>
         <Stack>
-        <div dir="rtl">
-
-          {type === 'register' && (
+          <div dir="rtl">
+            {type === "register" && (
+              <TextInput
+                label="שמך"
+                placeholder="השם שלך"
+                value={form.values.name}
+                onChange={(event) =>
+                  form.setFieldValue("name", event.currentTarget.value)
+                }
+                radius="md"
+              />
+            )}
             <TextInput
-              label="שמך"
-              placeholder="השם שלך"
-              value={form.values.name}
-              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+              required
+              label="שם משתמש או מספר אישי"
+              placeholder="הכנס שם משתמש או מספר אישי"
+              value={form.values.email}
+              onChange={(event) =>
+                form.setFieldValue("email", event.currentTarget.value)
+              }
+              error={form.errors.email && "Invalid email"}
               radius="md"
+              style={{ width: "100%" }}
             />
-          )}
-          <TextInput
-            required
-            label="שם משתמש או מספר אישי"
-            placeholder="הכנס שם משתמש או מספר אישי"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
-            radius="md"
-            style={{ width: '100%' }}
-          />
 
-          <PasswordInput
-            required
-            label="סיסמה"
-            placeholder="הכנס סיסמה"
-            value={form.values.password}
-            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
-            radius="md"
-            mb="md"
-          />
-        
-          {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+            <PasswordInput
+              required
+              label="סיסמה"
+              placeholder="הכנס סיסמה"
+              value={form.values.password}
+              onChange={(event) =>
+                form.setFieldValue("password", event.currentTarget.value)
+              }
+              error={
+                form.errors.password &&
+                "Password should include at least 6 characters"
+              }
+              radius="md"
+              mb="md"
             />
-          )}
+
+            {type === "register" && (
+              <Checkbox
+                label="I accept terms and conditions"
+                checked={form.values.terms}
+                onChange={(event) =>
+                  form.setFieldValue("terms", event.currentTarget.checked)
+                }
+              />
+            )}
           </div>
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
-            {type === 'register'
-              ? 'כבר יש לך משתמש ? התחבר'
+          <Anchor
+            component="button"
+            type="button"
+            c="dimmed"
+            onClick={() => toggle()}
+            size="xs"
+          >
+            {type === "register"
+              ? "כבר יש לך משתמש ? התחבר"
               : "אין לך חשבון ? הרשם"}
           </Anchor>
           <Button text="התחבר" type="submit" radius="xl">
-              {type === 'register' ? 'Register' : 'התחבר'}
+            {type === "register" ? "Register" : "התחבר"}
           </Button>
         </Group>
       </form>
