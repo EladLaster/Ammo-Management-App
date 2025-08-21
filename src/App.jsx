@@ -5,14 +5,14 @@ import { RequestsPageAdmin } from "./Pages/RequestsPageAdmin";
 import { LoginPage } from "./Pages/LoginPage";
 import HomePageUser from "./Pages/HomePageUser";
 import { FormPage } from "./Pages/FormPage";
+import "./App.css"
 
 function App() {
   return (
-
-    
+    <Router>
       <Routes>
         {/* דף כניסה */}
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<div className="container"><LoginPage /></div>} />
 
         {/* דפים למשתמש אדמין */}
         <Route path="/home-admin" element={<HomePageAdmin />} />
@@ -22,8 +22,9 @@ function App() {
         <Route path="/home-user" element={<HomePageUser />} />
 
         {/* דף טופס */}
-        <Route path="/form" element={<FormPage />} />
+        <Route path="/form" element={<div className="container"><FormPage /></div>} />
       </Routes>
+    </Router>
   );
 }
 

@@ -6,6 +6,31 @@ class AuthProvider {
 
   constructor() {
     makeAutoObservable(this);
+    // טעינת משתמש משמור בעת אתחול
+    this.loadUserFromStorage();
+  }
+
+  // שמירת משתמש ב-sessionStorage
+  saveUserToStorage(user) {
+    if (user) {
+      sessionStorage.setItem('activeUser', JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem('activeUser');
+    }
+  }
+
+  // טעינת משתמש מ-sessionStorage
+  loadUserFromStorage() {
+    try {
+      const savedUser = sessionStorage.getItem('activeUser');
+      if (savedUser) {
+        this.activeUser = JSON.parse(savedUser);
+        console.log("Loaded user from storage:", this.activeUser);
+      }
+    } catch (error) {
+      console.error("Error loading user from storage:", error);
+      sessionStorage.removeItem('activeUser');
+    }
   }
 
   makeInternalEmail = () =>
@@ -47,10 +72,10 @@ class AuthProvider {
   };
 
   handleSignIn = async (username, password) => {
-    // שליפת יוזר מהטבלה
+    // שליפת יוזר מהטבלה - כולל unit_id ו-location
     const { data: userRow, error } = await supabase
       .from("Users")
-      .select("id, internal_email, role, name, username")
+      .select("id, internal_email, role, name, username, unit_id, location")
       .eq("username", username)
       .single();
 
@@ -79,9 +104,19 @@ class AuthProvider {
     } else if (normalizedRole === "משתמש" || normalizedRole === "user") {
       normalizedRole = "User";
     }
-    const userWithNormalizedRole = { ...userRow, role: normalizedRole };
+    
+    const userWithNormalizedRole = { 
+      ...userRow, 
+      role: normalizedRole 
+    };
+    
     console.log("User after login:", userWithNormalizedRole);
+    console.log("User unit_id:", userWithNormalizedRole.unit_id);
+    
     this.activeUser = userWithNormalizedRole;
+    // שמירת המשתמש ב-storage
+    this.saveUserToStorage(userWithNormalizedRole);
+    
     return userWithNormalizedRole;
   };
 
@@ -92,6 +127,8 @@ class AuthProvider {
       throw error;
     } else {
       this.activeUser = null;
+      // מחיקת המשתמש מה-storage
+      this.saveUserToStorage(null);
     }
   };
 

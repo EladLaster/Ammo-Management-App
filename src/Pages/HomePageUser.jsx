@@ -17,19 +17,20 @@ import InventoryTable from "../components/InventoryTable";
 import MyRequests from "../components/MyRequests";
 import { stockStore } from "../stores";
 import { authProvider } from "../../AuthProvider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 // Minimal home page: button (no navigation yet) + inventory table,
 // with basic loading, error, and empty states from the store
 const HomePageUser = observer(function HomePageUser() {
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Load once on mount
     stockStore.load();
   }, []);
 
-  const handleNewRequestClick = () => {
-    // TODO: open request form page later
-    console.log("New Request clicked");
-  };
+  
 
   // Get state from store
   const { isLoading, error, myInventory } = stockStore;
@@ -47,7 +48,7 @@ const HomePageUser = observer(function HomePageUser() {
             </Text>
           )}
         </div>
-        <Button onClick={handleNewRequestClick}>בקשה חדשה</Button>
+        <Button onClick={()=>{navigate("/form")}}>בקשה חדשה</Button>
       </Group>
 
       <Card withBorder radius="md" p="md" mb="xl">
