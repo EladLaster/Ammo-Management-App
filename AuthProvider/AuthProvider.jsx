@@ -50,7 +50,7 @@ class AuthProvider {
     // שליפת יוזר מהטבלה
     const { data: userRow, error } = await supabase
       .from("Users")
-      .select("internal_email, role, name, username")
+      .select("id, internal_email, role, name, username")
       .eq("username", username)
       .single();
 
@@ -70,9 +70,19 @@ class AuthProvider {
       return null;
     }
 
-    console.log("Log in success!");
-    this.activeUser = userRow;
-    return userRow; // מכיל גם role
+    // Normalize role for navigation logic
+    let normalizedRole = userRow.role;
+    if (normalizedRole === "Admin" || normalizedRole === "User") {
+      // ok
+    } else if (normalizedRole === "מנהל" || normalizedRole === "admin") {
+      normalizedRole = "Admin";
+    } else if (normalizedRole === "משתמש" || normalizedRole === "user") {
+      normalizedRole = "User";
+    }
+    const userWithNormalizedRole = { ...userRow, role: normalizedRole };
+    console.log("User after login:", userWithNormalizedRole);
+    this.activeUser = userWithNormalizedRole;
+    return userWithNormalizedRole;
   };
 
   handleLogout = async () => {

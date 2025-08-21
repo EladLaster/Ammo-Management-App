@@ -46,8 +46,7 @@ const LoginPage = observer(() => {
 
       if (user) {
         if (user.role === "Admin") navigate("/home-admin");
-        else if (user.role === "User") navigate("/home-user");
-        else alert("אין הרשאה מתאימה");
+        else navigate("/home-user");
       } else {
         alert("שם משתמש או סיסמה שגויים");
       }

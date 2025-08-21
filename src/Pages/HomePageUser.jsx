@@ -16,6 +16,7 @@ import { observer } from "mobx-react-lite";
 import InventoryTable from "../components/InventoryTable";
 import MyRequests from "../components/MyRequests";
 import { stockStore } from "../stores";
+import { authProvider } from "../../AuthProvider/AuthProvider";
 
 // Minimal home page: button (no navigation yet) + inventory table,
 // with basic loading, error, and empty states from the store
@@ -32,11 +33,20 @@ const HomePageUser = observer(function HomePageUser() {
 
   // Get state from store
   const { isLoading, error, myInventory } = stockStore;
+  const user = authProvider.getActiveUser();
+  const userId = user?.id; // או user?.user_id לפי מה שמוחזר מה-db
 
   return (
     <Container size="lg" pt="md" pb="xl" style={{ direction: "rtl" }}>
       <Group justify="space-between" mb="md">
-        <Title order={2}>דף בית משתמש</Title>
+        <div>
+          <Title order={2}>דף בית משתמש</Title>
+          {user && (
+            <Text size="md" c="dimmed" mt="xs">
+              משתמש מחובר: {user.name || user.username || '---'} (ID: {userId})
+            </Text>
+          )}
+        </div>
         <Button onClick={handleNewRequestClick}>בקשה חדשה</Button>
       </Group>
 
@@ -73,7 +83,7 @@ const HomePageUser = observer(function HomePageUser() {
         <Title order={4} mb="sm">
           הבקשות שלי
         </Title>
-        <MyRequests userId={1} />
+        <MyRequests userId={userId} />
       </Card>
     </Container>
   );
