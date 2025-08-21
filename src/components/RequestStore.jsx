@@ -41,9 +41,9 @@ class RequestStore {
       const requestsData = await fetchRequests();
       this.requests = requestsData.map(req => ({
         id: req.id,
-        requester: req.users?.name || `משתמש ${req.user_id}`,
-        unitNumber: req.units?.name || `יחידה ${req.unit_id}`,
-        ammoType: req.items?.item_name || req.items?.category || 'תחמושת',
+        requester: req.users?.name || `${req.user_id}`,
+        unitNumber: req.units?.name || `${req.unit_id}`,
+        ammoType: req.items?.item_name || req.items?.category ,
         quantity: req.quantity,
         priority: this.getPriorityFromStatus(req.status),
         requestDate: new Date(req.created_at).toLocaleDateString('he-IL'),
@@ -70,7 +70,6 @@ class RequestStore {
   }
 
   getPriorityFromStatus(status) {
-    // ניתן להוסיף לוגיקה מורכבת יותר
     if (status === 'pending') return 'גבוהה';
     return 'בינונית';
   }

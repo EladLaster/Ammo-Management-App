@@ -13,6 +13,10 @@
   margin-bottom: 30px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; 
 }
 
 .pageTitle h1 {
@@ -20,11 +24,29 @@
   font-size: 28px;
   font-weight: 600;
 }
+.pageTitle button {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
-.pageTitle p {
-  margin: 5px 0 0 0;
-  opacity: 0.9;
-  font-size: 14px;
+.requestsButton {
+  position: absolute;
+  left: 15px; /* צד שמאל */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  color: #764ba2;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.requestsButton:hover {
+  background-color: #f0f0f0;
 }
 
 * {

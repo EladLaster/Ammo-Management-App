@@ -8,8 +8,8 @@ export const Inventory = observer(() => {
   const [search, setSearch] = useState("");
 
   const filtered = requestStore.requests.filter(r =>
-    r.requester.includes(search)
-  );
+  r.requester.includes(search)
+);
 
   const getStatusBadge = (status) => {
     const statusClasses = {
