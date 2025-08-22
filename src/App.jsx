@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HomePageAdmin } from "./Pages/HomePageAdmin";
 import { RequestsPageAdmin } from "./Pages/RequestsPageAdmin";
 import { LoginPage } from "./Pages/LoginPage";
-import HomePageUser from "./Pages/HomePageUser";
+import { HomePageUser } from "./Pages/HomePageUser";
 import { FormPage } from "./Pages/FormPage";
 import "./App.css"
 

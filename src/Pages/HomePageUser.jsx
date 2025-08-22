@@ -1,93 +1,147 @@
-/* Requires: npm i mobx mobx-react-lite
-   File: src/Lior/Pages/HomePageUser.jsx
-*/
-import { useEffect } from "react";
-import {
-  Container,
-  Title,
-  Group,
-  Button,
-  Card,
-  Loader,
-  Text,
-  Center,
-} from "@mantine/core";
-import { observer } from "mobx-react-lite";
-import InventoryTable from "../components/InventoryTable";
-import MyRequests from "../components/MyRequests";
-import { stockStore } from "../stores";
-import { authProvider } from "../../AuthProvider/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { requestStore } from "../components/RequestStore";
+import "./HomePageAdmin.css";
+import { authProvider } from "../../AuthProvider/AuthProvider";
 
-// Minimal home page: button (no navigation yet) + inventory table,
-// with basic loading, error, and empty states from the store
-const HomePageUser = observer(function HomePageUser() {
-
+export const HomePageUser = observer(() => {
+  const s = requestStore.status;
+  const inventoryItems = requestStore.getInventoryItems();
+  const isLoading = requestStore.isLoading;
+  const error = requestStore.error;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Load once on mount
-    stockStore.load();
-  }, []);
+  const getStatusBadge = (item) => {
+    const statusConfig = {
+      "מלאי תקין": { class: "statusGreen", icon: "🛡️" },
+      "מלאי נמוך": { class: "statusYellow", icon: "⚡" },
+      "מלאי קריטי": { class: "statusRed", icon: "❌" },
+    };
 
-  
+    const config = statusConfig[item.status] || statusConfig["מלאי תקין"];
 
-  // Get state from store
-  const { isLoading, error, myInventory } = stockStore;
-  const user = authProvider.getActiveUser();
-  const userId = user?.id; // או user?.user_id לפי מה שמוחזר מה-db
+    return (
+      <span className={`inventoryStatusBadge ${config.class}`}>
+        {item.statusIcon} {item.status}
+      </span>
+    );
+  };
+
+  const handleRefresh = () => {
+    requestStore.refreshData();
+  };
+
+  if (error) {
+    return (
+      <div className="statusContainer">
+        <div className="errorMessage">
+          שגיאה בטעינת הנתונים: {error}
+          <button onClick={handleRefresh} className="refreshBtn">
+            נסה שוב
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Container size="lg" pt="md" pb="xl" style={{ direction: "rtl" }}>
-      <Group justify="space-between" mb="md">
-        <div>
-          <Title order={2}>דף בית משתמש</Title>
-          {user && (
-            <Text size="md" c="dimmed" mt="xs">
-              משתמש מחובר: {user.name || user.username || '---'} (ID: {userId})
-            </Text>
-          )}
+    <div className="homepageAdmin">
+      <div className="pageTitle">
+        <h1>דף הבית {authProvider.activeUser.name}</h1>
+        <button
+          onClick={() => {
+            navigate("/form");
+          }}
+        >
+          בקשה חדשה
+        </button>
+      </div>
+      <div className="statusContainer">
+        <div className="statusTitle">
+          סקירה כללית של מצב המלאי ופעילויות אחרונות
+          {isLoading && <span className="loadingSpinner">⏳ טוען...</span>}
         </div>
-        <Button onClick={()=>{navigate("/form")}}>בקשה חדשה</Button>
-      </Group>
+        <div className="boxContainer">
+          <div className="box">
+            <span className="boxNumber">{s.ammoTypes}</span>
+            <div className="boxLabel">סוגי תחמושות</div>
+          </div>
+          <div className="box">
+            <span className="boxNumber">{s.unitsInStock.toLocaleString()}</span>
+            <div className="boxLabel">יחידות במלאי</div>
+          </div>
+          <div className="box">
+            <span className="boxNumber">{s.lowStockItems}</span>
+            <div className="boxLabel">פריטים במלאי נמוך</div>
+          </div>
+          <div className="box">
+            <span className="boxNumber">{s.pendingRequests}</span>
+            <div className="boxLabel">בקשות ממתינות</div>
+          </div>
+        </div>
 
-      <Card withBorder radius="md" p="md" mb="xl">
-        <Title order={4} mb="sm">
-          המלאי שלי ביחידה
-        </Title>
+        <div className="inventoryReportContainer">
+          <div className="inventoryReportHeader">
+            <h3>דו"ח מלאי</h3>
+            <button
+              onClick={handleRefresh}
+              className="refreshBtn"
+              disabled={isLoading}
+            >
+              {isLoading ? "⏳" : "🔄"} רענן
+            </button>
+          </div>
 
-        {/* Loading */}
-        {isLoading && (
-          <Center my="lg">
-            <Loader />
-          </Center>
-        )}
+          {inventoryItems.length === 0 && !isLoading ? (
+            <div className="noDataMessage">אין נתונים להצגה</div>
+          ) : (
+            <table className="inventoryReportTable">
+              <thead>
+                <tr>
+                  <th>תאריך עדכון</th>
+                  <th>שם פריט</th>
+                  <th>קוד פריט</th>
+                  <th>סטטוס מלאי</th>
+                  <th>כמות זמינה</th>
+                  <th>יחידת מידה</th>
+                  <th>סה"כ מלאי</th>
+                  <th>פרטים נוספים</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inventoryItems.map((item, idx) => (
+                  <tr key={idx} className={isLoading ? "loading-row" : ""}>
+                    <td>{item.date}</td>
+                    <td>{item.itemName}</td>
+                    <td>
+                      <span
+                        className={`itemCode ${
+                          item.status === "מלאי תקין"
+                            ? "codeGreen"
+                            : item.status === "מלאי נמוך"
+                            ? "codeYellow"
+                            : "codeRed"
+                        }`}
+                      >
+                        {item.itemCode}
+                      </span>
+                    </td>
+                    <td>{getStatusBadge(item)}</td>
+                    <td className="quantityCell">{item.quantity}</td>
+                    <td>{item.unit}</td>
+                    <td className="stockCell">{item.totalStock}</td>
+                    <td className="detailsCell">{item.details}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
 
-        {/* Error */}
-        {!isLoading && error && (
-          <Text c="red" fw={500}>
-            שגיאה בטעינת המלאי: {String(error)}
-          </Text>
-        )}
-
-        {/* Empty */}
-        {!isLoading && !error && (!myInventory || myInventory.length === 0) && (
-          <Text c="dimmed">אין נתונים להצגה כרגע.</Text>
-        )}
-
-        {/* Table */}
-        <InventoryTable />
-      </Card>
-
-      {/* בקשות שלי */}
-      <Card withBorder radius="md" p="md">
-        <Title order={4} mb="sm">
-          הבקשות שלי
-        </Title>
-        <MyRequests userId={userId} />
-      </Card>
-    </Container>
+          <div className="inventoryFooter">
+            <span>עדכון אחרון: {new Date().toLocaleString("he-IL")}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 });
-
-export default HomePageUser;
