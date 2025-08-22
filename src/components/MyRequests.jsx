@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../services/inventoryService";
+import { supabase } from "../../data/supabase";
 
 function MyRequests({ userId }) {
   const [requests, setRequests] = useState([]);

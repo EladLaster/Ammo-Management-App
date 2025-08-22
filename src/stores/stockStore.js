@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-
+// import {supabase} from '../../data/supabase'
 import { fetchInventory } from "../services/inventoryService";
 
 class StockStore {
@@ -10,6 +10,9 @@ class StockStore {
   constructor() {
     makeAutoObservable(this);
   }
+
+  
+
 
   get myInventory() {
     // אפשר להוסיף כאן סינון לפי משתמש מחובר

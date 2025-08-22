@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../services/inventoryService";
+import { supabase } from "../../data/supabase";
 
 function InventoryTable() {
   const [items, setItems] = useState([]);
@@ -12,7 +12,7 @@ function InventoryTable() {
       setError(null);
       try {
         const { data, error } = await supabase
-          .from("inventory")
+          .from("inventory_admins")
           .select(
             `unit_id, item_id, quantity, last_updated, items (item_name, category), units (name)`
           );
