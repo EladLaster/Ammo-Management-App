@@ -38,7 +38,7 @@ export default function ApproveRequests() {
       const { data, error } = await supabase
         .from("requests")
         .select(
-          "id, quantity, status, created_at, item_id, items(item_name, category), users:user_id(name)"
+          "id, quantity, status, created_at, item_id, unit_id, users:user_id(name), items(item_name, category)"
         )
         .eq("status", "pending");
       if (error) throw error;
@@ -64,6 +64,29 @@ export default function ApproveRequests() {
 
       // אם מאושר - עדכן מלאי
       if (newStatus === "approved" && req) {
+        // לוגים לאיתור בעיות
+        console.log("[ApproveRequests] Approving request:", req);
+        if (!req.unit_id || !req.item_id || !req.quantity) {
+          alert(
+            "שגיאה: נתונים חסרים או לא תקינים בבקשה (unit_id, item_id, quantity)"
+          );
+          return;
+        }
+        // בדוק אם יש מספיק מלאי ליחידה ב-inventory_admins
+        const { data: adminInv, error: adminInvError } = await supabase
+          .from("inventory_admins")
+          .select("quantity")
+          .eq("unit_id", req.unit_id)
+          .eq("item_id", req.item_id)
+          .maybeSingle();
+        if (adminInvError) {
+          console.error("[ApproveRequests] adminInvError", adminInvError);
+          throw adminInvError;
+        }
+        if (!adminInv || adminInv.quantity < req.quantity) {
+          alert("אין מספיק מלאי לאישור הבקשה (inventory_admins)");
+          return;
+        }
         // בדוק אם קיים רשומה במלאי
         const { data: invRows, error: invError } = await supabase
           .from("inventory_users")
@@ -71,7 +94,10 @@ export default function ApproveRequests() {
           .eq("unit_id", req.unit_id)
           .eq("item_id", req.item_id)
           .maybeSingle();
-        if (invError) throw invError;
+        if (invError) {
+          console.error("[ApproveRequests] invError", invError);
+          throw invError;
+        }
         if (invRows) {
           // עדכן כמות קיימת
           const { error: updateError } = await supabase
@@ -82,7 +108,10 @@ export default function ApproveRequests() {
             })
             .eq("unit_id", req.unit_id)
             .eq("item_id", req.item_id);
-          if (updateError) throw updateError;
+          if (updateError) {
+            console.error("[ApproveRequests] updateError", updateError);
+            throw updateError;
+          }
         } else {
           // צור רשומה חדשה
           const { error: insertError } = await supabase
@@ -93,7 +122,23 @@ export default function ApproveRequests() {
               quantity: req.quantity,
               last_updated: new Date().toISOString(),
             });
-          if (insertError) throw insertError;
+          if (insertError) {
+            console.error("[ApproveRequests] insertError", insertError);
+            throw insertError;
+          }
+        }
+        // עדכן את המלאי של האדמין (הפחתה)
+        const { error: adminUpdateError } = await supabase
+          .from("inventory_admins")
+          .update({
+            quantity: adminInv.quantity - req.quantity,
+            last_updated: new Date().toISOString(),
+          })
+          .eq("unit_id", req.unit_id)
+          .eq("item_id", req.item_id);
+        if (adminUpdateError) {
+          console.error("[ApproveRequests] adminUpdateError", adminUpdateError);
+          throw adminUpdateError;
         }
       }
       setRequests((prev) => prev.filter((r) => r.id !== id));
