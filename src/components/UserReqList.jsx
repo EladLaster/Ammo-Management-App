@@ -2,6 +2,17 @@ import { useEffect, useState } from "react";
 import { Card, Title, Table, Loader, Text, Center } from "@mantine/core";
 import { supabase } from "../../data/supabase";
 
+
+function translateStatus(status) {
+  const statusMap = {
+    pending: "ממתינה",
+    approved: "אושרה",
+    rejected: "נדחתה",
+    completed: "הושלמה",
+  };
+  return statusMap[status] || status;
+}
+
 function UserReqList({ userId }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,29 +62,32 @@ function UserReqList({ userId }) {
   }
   return (
     <Card withBorder radius="md" p="md" mt="xl">
-      <Title order={4} mb="sm">
+      <Title order={2} mb="sm" style={{ textAlign: 'right', fontSize: 32, fontWeight: 800 }}>
         הבקשות שלי
       </Title>
-      <Table striped highlightOnHover withColumnBorders>
+      <Table
+        striped
+        highlightOnHover
+        withColumnBorders
+        style={{ direction: 'rtl', textAlign: 'right', fontSize: 16 }}
+      >
         <thead>
           <tr>
-            <th>מזהה</th>
-            <th>פריט</th>
-            <th>כמות</th>
-            <th>סטטוס</th>
-            <th>תאריך</th>
+            <th style={{ textAlign: 'right', padding: '8px 16px' }}>פריט</th>
+            <th style={{ textAlign: 'right', padding: '8px 16px' }}>כמות</th>
+            <th style={{ textAlign: 'right', padding: '8px 16px' }}>סטטוס</th>
+            <th style={{ textAlign: 'right', padding: '8px 16px' }}>תאריך</th>
           </tr>
         </thead>
         <tbody>
           {requests.map((req) => (
             <tr key={req.id}>
-              <td>{req.id}</td>
-              <td>{req.items?.item_name || req.item_id}</td>
-              <td>{req.quantity}</td>
-              <td>{req.status}</td>
-              <td>
+              <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 500 }}>{req.items?.item_name || req.item_id}</td>
+              <td style={{ textAlign: 'right', padding: '8px 16px' }}>{req.quantity}</td>
+              <td style={{ textAlign: 'right', padding: '8px 16px' }}>{translateStatus(req.status)}</td>
+              <td style={{ textAlign: 'right', padding: '8px 16px' }}>
                 {req.created_at
-                  ? new Date(req.created_at).toLocaleDateString()
+                  ? new Date(req.created_at).toLocaleDateString("he-IL")
                   : ""}
               </td>
             </tr>

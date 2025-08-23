@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
 import "./HomePageAdmin.css";
@@ -11,6 +12,12 @@ export const HomePageUser = observer(() => {
   const isLoading = requestStore.isLoading;
   const error = requestStore.error;
   const navigate = useNavigate();
+
+  // טען נתוני מלאי אוטומטית בטעינת הדף
+  useEffect(() => {
+    requestStore.refreshData();
+    // eslint-disable-next-line
+  }, []);
 
   const getStatusBadge = (item) => {
     const statusConfig = {
@@ -50,6 +57,11 @@ export const HomePageUser = observer(() => {
   }
 
   const userId = authProvider.activeUser?.id;
+  // חישוב בקשות ממתינות של המשתמש הנוכחי בלבד
+  const userPendingRequests = requestStore.requests.filter(
+    (r) => r.originalStatus === "pending" && r.requester === authProvider.activeUser.name
+  ).length;
+
   return (
     <div className="homepageAdmin">
       <div className="pageTitle" style={{ gap: 0 }}>
@@ -108,7 +120,7 @@ export const HomePageUser = observer(() => {
             <div className="boxLabel">פריטים במלאי נמוך</div>
           </div>
           <div className="box">
-            <span className="boxNumber">{s.pendingRequests}</span>
+            <span className="boxNumber">{userPendingRequests}</span>
             <div className="boxLabel">בקשות ממתינות</div>
           </div>
         </div>
@@ -132,9 +144,8 @@ export const HomePageUser = observer(() => {
               <thead>
                 <tr>
                   <th>תאריך עדכון</th>
-                  <th>שם פריט</th>
-                  <th>שם פריט</th>
                   <th>קוד פריט</th>
+                  <th>שם פריט</th>
                   <th>סטטוס מלאי</th>
                   <th>כמות זמינה</th>
                   <th>סה"כ מלאי</th>
@@ -144,9 +155,7 @@ export const HomePageUser = observer(() => {
               <tbody>
                 {inventoryItems.map((item, idx) => (
                   <tr key={idx} className={isLoading ? "loading-row" : ""}>
-                    <td>
-                      {item.details || item.items?.item_name || item.itemName}
-                    </td>
+                    <td>{item.date}</td>
                     <td>
                       <span
                         className={`itemCode ${
@@ -160,6 +169,7 @@ export const HomePageUser = observer(() => {
                         {item.itemCode}
                       </span>
                     </td>
+                    <td>{item.details || item.items?.item_name || item.itemName}</td>
                     <td>{getStatusBadge(item)}</td>
                     <td className="quantityCell">{item.quantity}</td>
                     <td className="stockCell">{item.totalStock}</td>
