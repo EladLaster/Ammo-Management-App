@@ -4,14 +4,19 @@ import UnitWeather from "./UnitWeather";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "./RequestStore";
 
+
 const UnitWeatherContainer = observer(() => {
-  // נניח שליחידה יש שם עיר בשדה location או name
-  // ניקח את שם העיר מהבקשה הראשונה של המשתמש (אם יש)
+  // ננסה למצוא שם עיר מתוך כל הבקשות של המשתמש (location או name)
   let city = null;
-  if (requestStore.requests.length > 0) {
-    // ננסה מהשדה units.location או units.name
-    const req = requestStore.requests[0];
-    city = req.unitLocation || req.unitNumber || null;
+  for (const req of requestStore.requests) {
+    if (req.unitLocation && typeof req.unitLocation === 'string' && req.unitLocation.trim().length > 1) {
+      city = req.unitLocation.trim();
+      break;
+    }
+    if (req.unitNumber && typeof req.unitNumber === 'string' && req.unitNumber.trim().length > 1) {
+      city = req.unitNumber.trim();
+      break;
+    }
   }
   return <UnitWeather city={city} />;
 });
