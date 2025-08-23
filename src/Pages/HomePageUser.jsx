@@ -59,7 +59,9 @@ export const HomePageUser = observer(() => {
   const userId = authProvider.activeUser?.id;
   // חישוב בקשות ממתינות של המשתמש הנוכחי בלבד
   const userPendingRequests = requestStore.requests.filter(
-    (r) => r.originalStatus === "pending" && r.requester === authProvider.activeUser.name
+    (r) =>
+      r.originalStatus === "pending" &&
+      r.requester === authProvider.activeUser.name
   ).length;
 
   return (
@@ -169,7 +171,9 @@ export const HomePageUser = observer(() => {
                         {item.itemCode}
                       </span>
                     </td>
-                    <td>{item.details || item.items?.item_name || item.itemName}</td>
+                    <td>
+                      {item.details || item.items?.item_name || item.itemName}
+                    </td>
                     <td>{getStatusBadge(item)}</td>
                     <td className="quantityCell">{item.quantity}</td>
                     <td className="stockCell">{item.totalStock}</td>

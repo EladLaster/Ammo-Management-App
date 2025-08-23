@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Card, Title, Table, Loader, Text, Center } from "@mantine/core";
 import { supabase } from "../../data/supabase";
 
-
 function translateStatus(status) {
   const statusMap = {
     pending: "ממתינה",
@@ -62,30 +61,46 @@ function UserReqList({ userId }) {
   }
   return (
     <Card withBorder radius="md" p="md" mt="xl">
-      <Title order={2} mb="sm" style={{ textAlign: 'right', fontSize: 32, fontWeight: 800 }}>
+      <Title
+        order={2}
+        mb="sm"
+        style={{ textAlign: "right", fontSize: 32, fontWeight: 800 }}
+      >
         הבקשות שלי
       </Title>
       <Table
         striped
         highlightOnHover
         withColumnBorders
-        style={{ direction: 'rtl', textAlign: 'right', fontSize: 16 }}
+        style={{ direction: "rtl", textAlign: "right", fontSize: 16 }}
       >
         <thead>
           <tr>
-            <th style={{ textAlign: 'right', padding: '8px 16px' }}>פריט</th>
-            <th style={{ textAlign: 'right', padding: '8px 16px' }}>כמות</th>
-            <th style={{ textAlign: 'right', padding: '8px 16px' }}>סטטוס</th>
-            <th style={{ textAlign: 'right', padding: '8px 16px' }}>תאריך</th>
+            <th style={{ textAlign: "right", padding: "8px 16px" }}>פריט</th>
+            <th style={{ textAlign: "right", padding: "8px 16px" }}>כמות</th>
+            <th style={{ textAlign: "right", padding: "8px 16px" }}>סטטוס</th>
+            <th style={{ textAlign: "right", padding: "8px 16px" }}>תאריך</th>
           </tr>
         </thead>
         <tbody>
           {requests.map((req) => (
             <tr key={req.id}>
-              <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 500 }}>{req.items?.item_name || req.item_id}</td>
-              <td style={{ textAlign: 'right', padding: '8px 16px' }}>{req.quantity}</td>
-              <td style={{ textAlign: 'right', padding: '8px 16px' }}>{translateStatus(req.status)}</td>
-              <td style={{ textAlign: 'right', padding: '8px 16px' }}>
+              <td
+                style={{
+                  textAlign: "right",
+                  padding: "8px 16px",
+                  fontWeight: 500,
+                }}
+              >
+                {req.items?.item_name || req.item_id}
+              </td>
+              <td style={{ textAlign: "right", padding: "8px 16px" }}>
+                {req.quantity}
+              </td>
+              <td style={{ textAlign: "right", padding: "8px 16px" }}>
+                {translateStatus(req.status)}
+              </td>
+              <td style={{ textAlign: "right", padding: "8px 16px" }}>
                 {req.created_at
                   ? new Date(req.created_at).toLocaleDateString("he-IL")
                   : ""}
