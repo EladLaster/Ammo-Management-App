@@ -1,6 +1,5 @@
 import UnitWeatherContainer from "../components/UnitWeatherContainer";
 import UserReqList from "../components/UserReqList";
-import ApproveRequests from "../components/ApproveRequests";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
 import { useNavigate } from "react-router-dom";
@@ -166,10 +165,6 @@ export const HomePageAdmin = observer(() => {
       </div>
       {/* רשימת כל הבקשות */}
       <UserReqList userId={null} />
-      {/* בקשות ממתינות לאישור */}
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <ApproveRequests />
-      </div>
     </div>
   );
 });
