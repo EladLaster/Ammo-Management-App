@@ -74,7 +74,7 @@ const LoginPage = observer(() => {
       radius="md"
       p="lg"
       withBorder
-      style={{ width: 420, maxWidth: "98vw", background: "#222" }}
+      style={{ width: 420, maxWidth: "98vw" }}
     >
       <Flex direction="column" align="center" justify="center" mb="md">
         <Text size="lg" fw={500}>

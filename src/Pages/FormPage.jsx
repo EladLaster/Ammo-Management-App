@@ -10,17 +10,19 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import "dayjs/locale/he";
-import { supabase } from '../../data/supabase';
+import { supabase } from "../../data/supabase";
 import { authProvider } from "../../AuthProvider/AuthProvider";
 import { observer } from "mobx-react-lite";
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
 import { dbProvider } from "../../DBProvider/DBProvider";
 
 const FormPage = observer(() => {
-
+  const navigate = useNavigate();
   const [armorTypes, setArmorTypes] = useState([]);
   const [choosenArmorId, setChoosenArmorId] = useState("");
-    const form = useForm({
+  const form = useForm({
     initialValues: {
       requestType: "",
       usageType: "",
@@ -40,37 +42,74 @@ const FormPage = observer(() => {
     },
   });
 
-
-
-useEffect(() => {
-  const fetchId = async () => {
-    if (form.values.usageType) {
-      const id = await dbProvider.fetchArmorIdByName(form.values.usageType);
-      if (id) {
-        setChoosenArmorId(id.toString());
-      } else {
-        setChoosenArmorId("");
+  useEffect(() => {
+    const fetchId = async () => {
+      if (form.values.usageType) {
+        const id = await dbProvider.fetchArmorIdByName(form.values.usageType);
+        if (id) {
+          setChoosenArmorId(id.toString());
+        } else {
+          setChoosenArmorId("");
+        }
       }
+    };
+
+    fetchId();
+  }, [form.values.usageType]);
+
+  useEffect(() => {
+    dbProvider.loadArmorTypes(form.values.requestType);
+  }, [form.values.requestType]);
+
+  const handleSubmit = async () => {
+    try {
+      // בדיקת תקינות ערכים
+      const userId = authProvider.activeUser?.id;
+      const unitId = authProvider.activeUser?.unit_id;
+      if (!userId || !unitId || !choosenArmorId) {
+        notifications.show({
+          color: "red",
+          message: "חסרים נתונים לשליחת הבקשה",
+        });
+        return;
+      }
+      if (typeof userId !== "number" || isNaN(userId)) {
+        notifications.show({
+          color: "red",
+          message:
+            "שגיאה: מזהה המשתמש אינו מספר. ודא שאתה מחובר עם משתמש קיים מהטבלה Users.",
+        });
+        return;
+      }
+      if (typeof unitId !== "number" || isNaN(unitId)) {
+        notifications.show({
+          color: "red",
+          message:
+            "שגיאה: מזהה היחידה אינו מספר. ודא שלמשתמש שלך משויכת יחידה קיימת.",
+        });
+        return;
+      }
+      await dbProvider.insertNewRequest(
+        userId,
+        unitId,
+        Number(choosenArmorId),
+        form.values.quantity,
+        "pending"
+      );
+      notifications.show({ color: "green", message: "הבקשה נשלחה בהצלחה!" });
+      form.reset();
+      setTimeout(() => {
+        navigate(-1); // חזרה לעמוד הקודם
+      }, 700);
+    } catch (error) {
+      notifications.show({ color: "red", message: "אירעה שגיאה בשליחת הבקשה" });
+      console.error("Error submitting request:", error);
     }
   };
 
-  fetchId();
-}, [form.values.usageType]);
-
-
-
-   useEffect(() => {
-    dbProvider.loadArmorTypes(form.values.requestType);
-  
-  }, [form.values.requestType]);
-
-
-
-
-  
   return (
     <div dir="rtl">
-      <form onSubmit={form.onSubmit(() => dbProvider.insertNewRequest(authProvider.activeUser.id, authProvider.activeUser.unit_id, Number(choosenArmorId), form.values.quantity, "pending"))}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <Select
             label="סוג הבקשה"
@@ -93,10 +132,7 @@ useEffect(() => {
             {...form.getInputProps("quantity")}
           />
 
-          <Radio.Group
-            label="דרגת עדיפות"
-            {...form.getInputProps("priority")}
-          >
+          <Radio.Group label="דרגת עדיפות" {...form.getInputProps("priority")}>
             <Group mt="xs">
               <Radio value="low" label="נמוכה" />
               <Radio value="medium" label="בינונית" />
@@ -134,7 +170,5 @@ useEffect(() => {
     </div>
   );
 });
-
-
 
 export { FormPage };

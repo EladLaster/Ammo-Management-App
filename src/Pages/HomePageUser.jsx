@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
 import "./HomePageAdmin.css";
 import { authProvider } from "../../AuthProvider/AuthProvider";
+import UserReqList from "../components/UserReqList";
 
 export const HomePageUser = observer(() => {
   const s = requestStore.status;
@@ -31,6 +32,10 @@ export const HomePageUser = observer(() => {
     requestStore.refreshData();
   };
 
+  if (!authProvider.activeUser) {
+    navigate("/");
+    return null;
+  }
   if (error) {
     return (
       <div className="statusContainer">
@@ -44,16 +49,44 @@ export const HomePageUser = observer(() => {
     );
   }
 
+  const userId = authProvider.activeUser?.id;
   return (
     <div className="homepageAdmin">
-      <div className="pageTitle">
-        <h1>דף הבית {authProvider.activeUser.name}</h1>
+      <div className="pageTitle" style={{ gap: 0 }}>
         <button
+          className="requestsButton"
+          style={{
+            right: "20px",
+            left: "unset",
+            background: "white",
+            color: "#764ba2",
+          }}
           onClick={() => {
             navigate("/form");
           }}
         >
           בקשה חדשה
+        </button>
+        <h1>
+          דף הבית{" "}
+          <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
+            {authProvider.activeUser.name}
+          </span>
+        </h1>
+        <button
+          className="requestsButton"
+          style={{
+            left: "20px",
+            right: "unset",
+            background: "#e74c3c",
+            color: "white",
+          }}
+          onClick={async () => {
+            await authProvider.handleLogout();
+            navigate("/");
+          }}
+        >
+          התנתק
         </button>
       </div>
       <div className="statusContainer">
@@ -100,10 +133,10 @@ export const HomePageUser = observer(() => {
                 <tr>
                   <th>תאריך עדכון</th>
                   <th>שם פריט</th>
+                  <th>שם פריט</th>
                   <th>קוד פריט</th>
                   <th>סטטוס מלאי</th>
                   <th>כמות זמינה</th>
-                  <th>יחידת מידה</th>
                   <th>סה"כ מלאי</th>
                   <th>פרטים נוספים</th>
                 </tr>
@@ -111,8 +144,9 @@ export const HomePageUser = observer(() => {
               <tbody>
                 {inventoryItems.map((item, idx) => (
                   <tr key={idx} className={isLoading ? "loading-row" : ""}>
-                    <td>{item.date}</td>
-                    <td>{item.itemName}</td>
+                    <td>
+                      {item.details || item.items?.item_name || item.itemName}
+                    </td>
                     <td>
                       <span
                         className={`itemCode ${
@@ -128,7 +162,6 @@ export const HomePageUser = observer(() => {
                     </td>
                     <td>{getStatusBadge(item)}</td>
                     <td className="quantityCell">{item.quantity}</td>
-                    <td>{item.unit}</td>
                     <td className="stockCell">{item.totalStock}</td>
                     <td className="detailsCell">{item.details}</td>
                   </tr>
@@ -142,6 +175,8 @@ export const HomePageUser = observer(() => {
           </div>
         </div>
       </div>
+      {/* רשימת הבקשות שלי */}
+      <UserReqList userId={userId} />
     </div>
   );
 });
