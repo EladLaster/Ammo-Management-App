@@ -5,6 +5,7 @@ import { requestStore } from "../components/RequestStore";
 import "./HomePageAdmin.css";
 import { authProvider } from "../../AuthProvider/AuthProvider";
 import UserReqList from "../components/UserReqList";
+import UnitWeatherContainer from "../components/UnitWeatherContainer";
 
 export const HomePageUser = observer(() => {
   const s = requestStore.status;
@@ -66,6 +67,7 @@ export const HomePageUser = observer(() => {
 
   return (
     <div className="homepageAdmin">
+      <UnitWeatherContainer />
       <div className="pageTitle" style={{ gap: 0 }}>
         <button
           className="requestsButton"
