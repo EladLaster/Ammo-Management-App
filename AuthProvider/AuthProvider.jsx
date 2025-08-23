@@ -114,6 +114,7 @@ class AuthProvider {
     console.log("User unit_id:", userWithNormalizedRole.unit_id);
     
     this.activeUser = userWithNormalizedRole;
+
     // שמירת המשתמש ב-storage
     this.saveUserToStorage(userWithNormalizedRole);
     

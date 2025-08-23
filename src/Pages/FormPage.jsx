@@ -10,9 +10,17 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import "dayjs/locale/he";
+import { supabase } from '../../data/supabase';
+import { authProvider } from "../../AuthProvider/AuthProvider";
+import { observer } from "mobx-react-lite";
+import {useState, useEffect} from 'react'
+import { dbProvider } from "../../DBProvider/DBProvider";
 
-export function FormPage() {
-  const form = useForm({
+const FormPage = observer(() => {
+
+  const [armorTypes, setArmorTypes] = useState([]);
+  const [choosenArmorId, setChoosenArmorId] = useState("");
+    const form = useForm({
     initialValues: {
       requestType: "",
       usageType: "",
@@ -32,69 +40,101 @@ export function FormPage() {
     },
   });
 
+
+
+useEffect(() => {
+  const fetchId = async () => {
+    if (form.values.usageType) {
+      const id = await dbProvider.fetchArmorIdByName(form.values.usageType);
+      if (id) {
+        setChoosenArmorId(id.toString());
+      } else {
+        setChoosenArmorId("");
+      }
+    }
+  };
+
+  fetchId();
+}, [form.values.usageType]);
+
+
+
+   useEffect(() => {
+    dbProvider.loadArmorTypes(form.values.requestType);
+  
+  }, [form.values.requestType]);
+
+
+
+
+  
   return (
     <div dir="rtl">
-        <form onSubmit={form.onSubmit(console.log)}>
+      <form onSubmit={form.onSubmit(() => dbProvider.insertNewRequest(authProvider.activeUser.id, authProvider.activeUser.unit_id, Number(choosenArmorId), form.values.quantity, "pending"))}>
         <Stack>
-            <Select
+          <Select
             label="סוג הבקשה"
             placeholder="בחר סוג בקשה"
-            data={["חימוש", "תחמושת", "ציוד"]}
+            data={["נשק", "תחמושת", "ציוד"]}
             {...form.getInputProps("requestType")}
-            />
+          />
 
-            <Select
+          <Select
             label="סוג התחמושות"
             placeholder="בחר סוג התממשות"
-            data={["תרגיל", "מבצע", "שמירה"]}
+            data={dbProvider.armorTypes}
             {...form.getInputProps("usageType")}
-            />
+          />
 
-            <NumberInput
+          <NumberInput
             label="כמות"
             placeholder="לדוגמה: 100"
             min={1}
             {...form.getInputProps("quantity")}
-            />
+          />
 
-            <Radio.Group
+          <Radio.Group
             label="דרגת עדיפות"
             {...form.getInputProps("priority")}
-            >
+          >
             <Group mt="xs">
-                <Radio value="low" label="נמוכה" />
-                <Radio value="medium" label="בינונית" />
-                <Radio value="high" label="גבוהה" />
-                <Radio value="urgent" label="דחוף" />
+              <Radio value="low" label="נמוכה" />
+              <Radio value="medium" label="בינונית" />
+              <Radio value="high" label="גבוהה" />
+              <Radio value="urgent" label="דחוף" />
             </Group>
-            </Radio.Group>
+          </Radio.Group>
 
-            <DateInput
+          <DateInput
             label="תאריך דרוש"
             placeholder="בחר תאריך"
             valueFormat="DD/MM/YYYY"
             locale="he"
             {...form.getInputProps("usageDate")}
-            />
+          />
 
-            <Select
+          <Select
             label="מטרת השימוש"
             placeholder="בחר מטרה"
             data={["אימון", "לחימה", "שמירה"]}
             {...form.getInputProps("purpose")}
-            />
+          />
 
-            <Textarea
+          <Textarea
             label="הצדקה לבקשה"
             placeholder="לדוגמה: נדרש 100 פצמ"
             autosize
             minRows={3}
             {...form.getInputProps("justification")}
-            />
+          />
 
-            <Button type="submit">שלח בקשה</Button>
+          <Button type="submit">שלח בקשה</Button>
         </Stack>
-        </form>
+      </form>
     </div>
   );
-}
+});
+
+
+
+export { FormPage };
