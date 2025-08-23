@@ -20,7 +20,7 @@ import { dbProvider } from "../../DBProvider/DBProvider";
 
 const FormPage = observer(() => {
   const navigate = useNavigate();
-  const [armorTypes, setArmorTypes] = useState([]);
+  // const [armorTypes, setArmorTypes] = useState([]);
   const [choosenArmorId, setChoosenArmorId] = useState("");
   const form = useForm({
     initialValues: {
@@ -109,6 +109,7 @@ const FormPage = observer(() => {
 
   return (
     <div dir="rtl">
+      <h2>הגשת בקשה חדשה: </h2>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <Select

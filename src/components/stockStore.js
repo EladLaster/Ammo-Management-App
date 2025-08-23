@@ -14,9 +14,12 @@ class StockStore {
   // ========== פונקציות API ========== //
 
   async fetchInventory(role, unitId = null) {
-    const roleName = role === "Admin" ? "admins" : "users";
-  let query = supabase.from(`inventory_${roleName}`).select(`
+     const roleName = role === "Admin" ? "admins" : "users";
+
+  // build the select list conditionally
+  const selectList = `
     unit_id,
+    ${roleName === "users" ? "user_id," : ""}
     item_id,
     quantity,
     last_updated,
@@ -27,15 +30,22 @@ class StockStore {
     units (
       name
     )
-  `);
+  `;
 
-  if (unitId) {
-    query = query.eq('unit_id', unitId);
+  // declare once, assign inside
+  let query = supabase.from(`inventory_${roleName}`).select(selectList);
+
+  // always filter by unit
+  const unit = unitId ?? authProvider.activeUser.unit_id;
+  query = query.eq("unit_id", unit);
+
+  // only users table has user_id
+  if (roleName === "users") {
+    query = query.eq("user_id", authProvider.activeUser.id);
   }
 
   const { data, error } = await query;
   if (error) throw error;
-
   return data;
 }
 

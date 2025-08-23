@@ -38,7 +38,7 @@ export default function ApproveRequests() {
       const { data, error } = await supabase
         .from("requests")
         .select(
-          "id, quantity, status, created_at, item_id, unit_id, users:user_id(name), items(item_name, category)"
+          "id, user_id, quantity, status, created_at, item_id, unit_id, users:user_id(name), items(item_name, category)"
         )
         .eq("status", "pending");
       if (error) throw error;
@@ -113,9 +113,12 @@ export default function ApproveRequests() {
           }
         } else {
           // צור רשומה חדשה
+          console.log("Requset: ")
+          console.log(req);
           const { error: insertError } = await supabase
             .from("inventory_users")
             .insert({
+              user_id : req.user_id,
               unit_id: req.unit_id,
               item_id: req.item_id,
               quantity: req.quantity,
