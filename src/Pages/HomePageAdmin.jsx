@@ -17,7 +17,6 @@ export const HomePageAdmin = observer(() => {
 
   useEffect(() => {
     requestStore.refreshData();
-    // eslint-disable-next-line
   }, []);
 
   const getStatusBadge = (item) => {

@@ -6,11 +6,14 @@ import {
   Select,
   Stack,
   Textarea,
+  Center,
+  Paper,
+  Title,
+  Divider,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import "dayjs/locale/he";
-import { supabase } from "../../data/supabase";
 import { authProvider } from "../../AuthProvider/AuthProvider";
 import { observer } from "mobx-react-lite";
 import { useState, useEffect } from "react";
@@ -18,10 +21,17 @@ import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import { dbProvider } from "../../DBProvider/DBProvider";
 
+// אייקונים
+import {
+  IconBox,
+  IconCalendar,
+  IconClipboard,
+} from "@tabler/icons-react";
+
 const FormPage = observer(() => {
   const navigate = useNavigate();
-  // const [armorTypes, setArmorTypes] = useState([]);
   const [choosenArmorId, setChoosenArmorId] = useState("");
+
   const form = useForm({
     initialValues: {
       requestType: "",
@@ -53,7 +63,6 @@ const FormPage = observer(() => {
         }
       }
     };
-
     fetchId();
   }, [form.values.usageType]);
 
@@ -63,9 +72,9 @@ const FormPage = observer(() => {
 
   const handleSubmit = async () => {
     try {
-      // בדיקת תקינות ערכים
       const userId = authProvider.activeUser?.id;
       const unitId = authProvider.activeUser?.unit_id;
+
       if (!userId || !unitId || !choosenArmorId) {
         notifications.show({
           color: "red",
@@ -89,6 +98,7 @@ const FormPage = observer(() => {
         });
         return;
       }
+
       await dbProvider.insertNewRequest(
         userId,
         unitId,
@@ -96,10 +106,12 @@ const FormPage = observer(() => {
         form.values.quantity,
         "pending"
       );
+
       notifications.show({ color: "green", message: "הבקשה נשלחה בהצלחה!" });
       form.reset();
+
       setTimeout(() => {
-        navigate(-1); // חזרה לעמוד הקודם
+        navigate(-1);
       }, 700);
     } catch (error) {
       notifications.show({ color: "red", message: "אירעה שגיאה בשליחת הבקשה" });
@@ -108,67 +120,112 @@ const FormPage = observer(() => {
   };
 
   return (
-    <div dir="rtl">
-      <h2>הגשת בקשה חדשה: </h2>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Stack>
-          <Select
-            label="סוג הבקשה"
-            placeholder="בחר סוג בקשה"
-            data={["נשק", "תחמושת", "ציוד"]}
-            {...form.getInputProps("requestType")}
-          />
+    <Center style={{ minHeight: "100vh" }}>
+      <Paper shadow="md" radius="lg" p="xl" withBorder dir="rtl" style={{ backgroundColor: "#e6d7ba",position: "relative" }}>
+        <Button
+  size="xs"
+  variant="filled"
+  color="red"
+  styles={(theme) => ({
+    root: {
+      position: "absolute",
+      top: 10,
+      right: 10,
+      minWidth: "40px",
+      padding: "0 6px",
+      fontWeight: 600,
+      "&:hover": {
+        backgroundColor: "red",
+      },
+    },
+  })}
+  onClick={() => navigate("/home-user")}
+>
+  ✕
+</Button>
 
-          <Select
-            label="סוג התחמושות"
-            placeholder="בחר סוג התממשות"
-            data={dbProvider.armorTypes}
-            {...form.getInputProps("usageType")}
-          />
+        <Title order={2} ta="center" mb="md" styles={{backgroundColor: "rgb(62, 68, 32)"}}>
+          הגשת בקשה חדשה
+        </Title>
+        <Divider my="sm" />
 
-          <NumberInput
-            label="כמות"
-            placeholder="לדוגמה: 100"
-            min={1}
-            {...form.getInputProps("quantity")}
-          />
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Stack spacing="md">
+            <Select
+              label="סוג הבקשה"
+              placeholder="בחר סוג בקשה"
+              data={["נשק", "תחמושת", "ציוד"]}
+              leftSection={<IconBox size={16} />}
+              {...form.getInputProps("requestType")}
+            />
 
-          <Radio.Group label="דרגת עדיפות" {...form.getInputProps("priority")}>
-            <Group mt="xs">
-              <Radio value="low" label="נמוכה" />
-              <Radio value="medium" label="בינונית" />
-              <Radio value="high" label="גבוהה" />
-              <Radio value="urgent" label="דחוף" />
+            <Select
+              label="סוג התחמושות"
+              placeholder="בחר סוג תחמושת"
+              data={dbProvider.armorTypes}
+              leftSection={<IconBox size={16} />}
+              {...form.getInputProps("usageType")}
+            />
+
+            <Group grow>
+              <NumberInput
+                label="כמות"
+                placeholder="לדוגמה: 100"
+                min={1}
+                {...form.getInputProps("quantity")}
+              />
+
+              <DateInput
+                label="תאריך דרוש"
+                placeholder="בחר תאריך"
+                valueFormat="DD/MM/YYYY"
+                locale="he"
+                leftSection={<IconCalendar size={16} />}
+                {...form.getInputProps("usageDate")}
+              />
             </Group>
-          </Radio.Group>
 
-          <DateInput
-            label="תאריך דרוש"
-            placeholder="בחר תאריך"
-            valueFormat="DD/MM/YYYY"
-            locale="he"
-            {...form.getInputProps("usageDate")}
-          />
+            <Radio.Group label="דרגת עדיפות" {...form.getInputProps("priority")} color="rgb(62, 68, 32)" >
+              <Group mt="xs">
+                <Radio value="low" label="נמוכה" />
+                <Radio value="medium" label="בינונית" />
+                <Radio value="high" label="גבוהה" />
+                <Radio value="urgent" label="דחוף" />
+              </Group>
+            </Radio.Group>
 
-          <Select
-            label="מטרת השימוש"
-            placeholder="בחר מטרה"
-            data={["אימון", "לחימה", "שמירה"]}
-            {...form.getInputProps("purpose")}
-          />
+            <Textarea
+              label="הצדקה לבקשה"
+              placeholder="לדוגמה: נדרש 100 פצמ"
+              autosize
+              minRows={3}
+              leftSection={<IconClipboard size={16} />}
+              {...form.getInputProps("justification")}
+            />
 
-          <Textarea
-            label="הצדקה לבקשה"
-            placeholder="לדוגמה: נדרש 100 פצמ"
-            autosize
-            minRows={3}
-            {...form.getInputProps("justification")}
-          />
-
-          <Button type="submit">שלח בקשה</Button>
-        </Stack>
-      </form>
-    </div>
+            <Button
+              type="submit"
+              color="blue"
+              size="md"
+              fullWidth
+              leftSection={<IconClipboard />}
+              styles={(theme) => ({
+              root: {
+                backgroundColor: "rgb(62, 68, 32)",
+                color: "white",
+                fontWeight: 600,
+                "&:hover": {
+                  backgroundColor: "rgb(50, 55, 28)",
+                },
+              },
+            })}
+            >
+              שלח בקשה
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+    </Center>
   );
 });
 

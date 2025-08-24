@@ -84,7 +84,7 @@ export const HomePageUser = observer(() => {
           בקשה חדשה
         </button>
         <h1>
-          דף הבית{" "}
+           דף הבית (משתמש){" "}
           <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
             {authProvider.activeUser.name}
           </span>
