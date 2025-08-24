@@ -43,88 +43,72 @@ export default function UnitWeather({ city }) {
   }
 
   return (
-    <div className="modern-card p-md">
+    <div >
       <div
-        className="modern-btn modern-btn-secondary"
         style={{
           position: "relative",
-          cursor: "pointer",
-          background:
-            "linear-gradient(135deg, var(--warning-50) 0%, var(--secondary-50) 100%)",
-          border: "1px solid var(--warning-300)",
-          color: "var(--military-dark)",
-          fontWeight: "600",
+          display: "inline-block",
         }}
         onMouseEnter={() => setOpened(true)}
         onMouseLeave={() => setOpened(false)}
       >
-        🌤️ מזג אוויר
+        <div
+          className="modern-btn modern-btn-secondary"
+          style={{
+            cursor: "pointer",
+            background:
+              "linear-gradient(135deg, var(--warning-50) 0%, var(--secondary-50) 100%)",
+            border: "1px solid var(--warning-300)",
+            color: "var(--military-dark)",
+            fontWeight: "600",
+          }}
+        >
+          🌤️ מזג אוויר
+        </div>
+
         {opened && (
-          <div
-            className="modern-card"
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: "0",
-              right: "0",
-              zIndex: 1000,
-              marginTop: "var(--space-sm)",
-              minWidth: "250px",
-              boxShadow: "var(--shadow-xl)",
-              border: "1px solid var(--warning-300)",
-            }}
-            onMouseEnter={() => setOpened(true)}
-            onMouseLeave={() => setOpened(false)}
-          >
-            <div className="p-md">
-              <div className="modern-nav mb-sm">
-                <h4 style={{ margin: 0, color: "var(--military-green)" }}>
-                  {weather.name}
-                </h4>
-              </div>
+  <div
+    className="modern-card"
+    style={{
+      position: "absolute",
+      top: "100%",
+      right: 0,
+      zIndex: 1000,
+      marginTop: "var(--space-sm)",
+      width: "220px", // רוחב קצר
+      boxShadow: "var(--shadow-xl)",
+      border: "1px solid var(--warning-300)",
+      padding: "0.5rem",
+    }}
+  >
+    <div className="p-xs" style={{ textAlign: "right" }}>
+      <div className="modern-nav mb-xs">
+        <h4 style={{ margin: 0, fontSize: "0.9rem", color: "var(--military-green)" }}>
+          {weather.name}
+        </h4>
+      </div>
 
-              <div className="flex items-center gap-md mb-sm">
-                <img
-                  src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
-                  alt="weather icon"
-                  width={40}
-                  height={40}
-                />
-                <div>
-                  <div className="modern-badge modern-badge-info">
-                    {weather.weather[0].description}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "1.2rem",
-                      fontWeight: "700",
-                      color: "var(--military-green)",
-                      marginTop: "var(--space-xs)",
-                    }}
-                  >
-                    {Math.round(weather.main.temp)}°C
-                  </div>
-                </div>
-              </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.8rem" }}>
+        <img
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+          alt="weather icon"
+          width={30}
+          height={30}
+        />
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          <span>{weather.weather[0].description}</span>
+          <span style={{ fontWeight: 600 }}>{Math.round(weather.main.temp)}°C</span>
+        </div>
+      </div>
 
-              <div
-                className="modern-grid modern-grid-2"
-                style={{ fontSize: "0.75rem" }}
-              >
-                <div className="text-center">
-                  <div className="modern-badge modern-badge-info">
-                    💧 לחות: {weather.main.humidity}%
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="modern-badge modern-badge-info">
-                    💨 רוח: {Math.round(weather.wind.speed)} קמ"ש
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px", fontSize: "0.75rem" }}>
+        <span>💧 {weather.main.humidity}%</span>
+        <span>💨 {Math.round(weather.wind.speed)} קמ"ש</span>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </div>
   );

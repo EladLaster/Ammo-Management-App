@@ -117,7 +117,7 @@ const FormPage = observer(() => {
 
   return (
     <div className="modern-container min-h-screen flex items-center justify-center">
-      <div className="modern-card" style={{ width: "100%", maxWidth: 600 }}>
+      <div className="modern-card" style={{ width: "100%", maxWidth: 600 , position: "relative"}}>
         <div className="p-xl">
           {/* Header */}
           <div className="modern-header text-center mb-xl">
@@ -135,11 +135,24 @@ const FormPage = observer(() => {
               minWidth: "40px",
               padding: "var(--space-xs)",
               fontSize: "1.2rem",
+              transition: "all 0.2s ease", // מוסיף אנימציה חלקה
+              backgroundColor: "var(--danger-500)", // צבע בסיסי
+              color: "white",
+              borderRadius: "4px",
             }}
             onClick={() => navigate("/home-user")}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--danger-400)";
+              e.currentTarget.style.transform = "scale(1.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--danger-500)";
+              e.currentTarget.style.transform = "scale(1)";
+            }}
           >
             ✕
           </button>
+
 
           {/* Form */}
           <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -189,11 +202,13 @@ const FormPage = observer(() => {
                   label="כמות"
                   placeholder="לדוגמה: 100"
                   min={1}
+                  value={form.values.quantity || undefined} // במקום 0
                   {...form.getInputProps("quantity")}
                   radius="lg"
                   size="md"
                   styles={{
                     input: {
+                      textAlign: "right", // מציג מספרים מימין
                       borderColor: "var(--secondary-300)",
                       "&:focus": {
                         borderColor: "var(--primary-500)",

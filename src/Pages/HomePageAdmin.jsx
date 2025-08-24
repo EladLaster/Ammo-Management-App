@@ -1,5 +1,5 @@
 import UnitWeatherContainer from "../components/API's/UnitWeatherContainer";
-import UserReqList from "../components/UserReqList";
+// import UserReqList from "../components/UserReqList";
 import ApproveRequests from "../components/ApproveRequests";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
@@ -77,12 +77,12 @@ export const HomePageAdmin = observer(() => {
             <p>ברוך הבא, {authProvider.activeUser.name}</p>
           </div>
           <div className="modern-nav-actions">
-            <button
+            {/* <button
               className="modern-btn modern-btn-secondary"
               onClick={() => navigate("/requests-admin")}
             >
               📋 בקשות ממתינות
-            </button>
+            </button> */}
             <button
               className="modern-btn modern-btn-danger"
               onClick={async () => {
@@ -216,9 +216,9 @@ export const HomePageAdmin = observer(() => {
       </div>
 
       {/* User Requests */}
-      <div className="mb-xl">
+      {/* <div className="mb-xl">
         <UserReqList userId={null} />
-      </div>
+      </div> */}
 
       {/* Approve Requests */}
       <div className="modern-card">
