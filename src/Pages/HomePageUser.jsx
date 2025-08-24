@@ -190,48 +190,49 @@ export const HomePageUser = observer(() => {
               </thead>
               <tbody>
                 {inventoryItems.map((item, idx) => {
-                  console.log('item.details:', item.details);
+                  console.log("item.details:", item.details);
                   return (
-                  <tr key={idx} className={isLoading ? "loading-row" : ""}>
-                    <td>{item.date}</td>
-                    <td>
-                      <span
-                        className={`itemCode ${
-                          item.status === "מלאי תקין"
-                            ? "codeGreen"
-                            : item.status === "מלאי נמוך"
-                            ? "codeYellow"
-                            : "codeRed"
-                        }`}
-                      >
-                        {item.itemCode}
-                      </span>
-                    </td>
-                    <td>
-                      {item.details || item.items?.item_name || item.itemName}
-                    </td>
-                    <td>{getStatusBadge(item)}</td>
-                    <td className="quantityCell">{item.quantity}</td>
-                    <td className="stockCell">{item.totalStock}</td>
-                    <td className="detailsCell">
-                      {item.details && (
-                        <button
-                          className="wikiDetailsBtn"
-                          style={{
-                            cursor: "pointer",
-                            color: "#764ba2",
-                            background: "none",
-                            border: "none",
-                            textDecoration: "underline",
-                          }}
-                          onClick={() => fetchWikiDescription(item.details)}
+                    <tr key={idx} className={isLoading ? "loading-row" : ""}>
+                      <td>{item.date}</td>
+                      <td>
+                        <span
+                          className={`itemCode ${
+                            item.status === "מלאי תקין"
+                              ? "codeGreen"
+                              : item.status === "מלאי נמוך"
+                              ? "codeYellow"
+                              : "codeRed"
+                          }`}
                         >
-                          מידע
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                )})}
+                          {item.itemCode}
+                        </span>
+                      </td>
+                      <td>
+                        {item.details || item.items?.item_name || item.itemName}
+                      </td>
+                      <td>{getStatusBadge(item)}</td>
+                      <td className="quantityCell">{item.quantity}</td>
+                      <td className="stockCell">{item.totalStock}</td>
+                      <td className="detailsCell">
+                        {item.details && (
+                          <button
+                            className="wikiDetailsBtn"
+                            style={{
+                              cursor: "pointer",
+                              color: "#764ba2",
+                              background: "none",
+                              border: "none",
+                              textDecoration: "underline",
+                            }}
+                            onClick={() => fetchWikiDescription(item.details)}
+                          >
+                            מידע
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
