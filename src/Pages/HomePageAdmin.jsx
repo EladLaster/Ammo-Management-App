@@ -6,7 +6,6 @@ import { requestStore } from "../components/RequestStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { authProvider } from "../../AuthProvider/AuthProvider";
-import "./HomePageAdmin.css";
 
 export const HomePageAdmin = observer(() => {
   const s = requestStore.status;
@@ -21,13 +20,13 @@ export const HomePageAdmin = observer(() => {
 
   const getStatusBadge = (item) => {
     const statusConfig = {
-      "מלאי תקין": { class: "statusGreen", icon: "🛡️" },
-      "מלאי נמוך": { class: "statusYellow", icon: "⚡" },
-      "מלאי קריטי": { class: "statusRed", icon: "❌" },
+      "מלאי תקין": { class: "modern-badge-success", icon: "🛡️" },
+      "מלאי נמוך": { class: "modern-badge-warning", icon: "⚡" },
+      "מלאי קריטי": { class: "modern-badge-danger", icon: "❌" },
     };
     const config = statusConfig[item.status] || statusConfig["מלאי תקין"];
     return (
-      <span className={`inventoryStatusBadge ${config.class}`}>
+      <span className={`modern-badge ${config.class}`}>
         {item.statusIcon} {item.status}
       </span>
     );
@@ -41,135 +40,197 @@ export const HomePageAdmin = observer(() => {
     navigate("/");
     return null;
   }
+
   if (error) {
     return (
-      <div className="statusContainer">
-        <div className="errorMessage">
-          שגיאה בטעינת הנתונים: {error}
-          <button onClick={handleRefresh} className="refreshBtn">
-            נסה שוב
-          </button>
+      <div className="modern-container">
+        <div className="modern-card p-xl">
+          <div className="text-center">
+            <div className="modern-badge modern-badge-danger mb-md">
+              שגיאה בטעינת הנתונים
+            </div>
+            <p className="mb-lg">{error}</p>
+            <button
+              onClick={handleRefresh}
+              className="modern-btn modern-btn-primary"
+            >
+              נסה שוב
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="homepageAdmin">
-      <UnitWeatherContainer />
-      <div className="pageTitle" style={{ gap: 0 }}>
-        {/* <button style={{
-            right: "20px",
-            left: "unset",
-          }}
-          onClick={()=>navigate("/requests-admin")}
-          >בקשות ממתינות</button> */}
-        <h1>
-          דף הבית (מנהל){" "}
-          <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
-            {authProvider.activeUser.name}
-          </span>
-        </h1>
-        <button
-          className="requestsButton"
-          style={{
-            left: "20px",
-            right: "unset",
-            background: "#e74c3c",
-            color: "white",
-          }}
-          onClick={async () => {
-            await authProvider.handleLogout();
-            navigate("/");
-          }}
-        >
-          התנתק
-        </button>
+    <div className="modern-container">
+      {/* Weather Widget */}
+      <div className="mb-xl">
+        <UnitWeatherContainer />
       </div>
-      <div className="statusContainer">
-        <div className="statusTitle">
-          סקירה כללית של מצב המלאי ופעילויות אחרונות
-          {isLoading && <span className="loadingSpinner">⏳ טוען...</span>}
+
+      {/* Header */}
+      <div className="modern-header">
+        <div className="modern-nav">
+          <div>
+            <h1>דף הבית - מנהל</h1>
+            <p>ברוך הבא, {authProvider.activeUser.name}</p>
+          </div>
+          <div className="modern-nav-actions">
+            <button
+              className="modern-btn modern-btn-secondary"
+              onClick={() => navigate("/requests-admin")}
+            >
+              📋 בקשות ממתינות
+            </button>
+            <button
+              className="modern-btn modern-btn-danger"
+              onClick={async () => {
+                await authProvider.handleLogout();
+                navigate("/");
+              }}
+            >
+              🚪 התנתק
+            </button>
+          </div>
         </div>
-        <div className="boxContainer">
-          <div className="box">
-            <span className="boxNumber">{s.ammoTypes}</span>
-            <div className="boxLabel">סוגי תחמושות</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{s.unitsInStock.toLocaleString()}</span>
-            <div className="boxLabel">יחידות במלאי</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{s.lowStockItems}</span>
-            <div className="boxLabel">פריטים במלאי נמוך</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{s.pendingRequests}</span>
-            <div className="boxLabel">בקשות ממתינות</div>
-          </div>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="modern-grid modern-grid-4 mb-xl">
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--military-green)" }}
+          >
+            {s.ammoTypes}
+          </span>
+          <div className="modern-stats-label">סוגי תחמושות</div>
         </div>
-        <div className="inventoryReportContainer">
-          <div className="inventoryReportHeader">
-            <h3>דו"ח מלאי</h3>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--success-600)" }}
+          >
+            {s.unitsInStock.toLocaleString()}
+          </span>
+          <div className="modern-stats-label">יחידות במלאי</div>
+        </div>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--warning-600)" }}
+          >
+            {s.lowStockItems}
+          </span>
+          <div className="modern-stats-label">פריטים במלאי נמוך</div>
+        </div>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--danger-600)" }}
+          >
+            {s.pendingRequests}
+          </span>
+          <div className="modern-stats-label">בקשות ממתינות</div>
+        </div>
+      </div>
+
+      {/* Inventory Report */}
+      <div className="modern-card mb-xl">
+        <div className="p-xl">
+          <div className="modern-nav mb-lg">
+            <h2>דו"ח מלאי</h2>
             <button
               onClick={handleRefresh}
-              className="refreshBtn"
+              className="modern-btn modern-btn-secondary"
               disabled={isLoading}
             >
               {isLoading ? "⏳" : "🔄"} רענן
             </button>
           </div>
+
           {inventoryItems.length === 0 && !isLoading ? (
-            <div className="noDataMessage">אין נתונים להצגה</div>
+            <div className="text-center p-xl">
+              <div className="modern-badge modern-badge-info mb-md">
+                אין נתונים להצגה
+              </div>
+            </div>
           ) : (
-            <table className="inventoryReportTable">
-              <thead>
-                <tr>
-                  <th>תאריך עדכון</th>
-                  <th>קוד פריט</th>
-                  <th>שם פריט</th>
-                  <th>סטטוס מלאי</th>
-                  <th>סה"כ מלאי</th>
-                  <th>פרטים נוספים</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inventoryItems.map((item, idx) => (
-                  <tr key={idx} className={isLoading ? "loading-row" : ""}>
-                    <td>{item.date}</td>
-                    <td>
-                      <span
-                        className={`itemCode ${
-                          item.status === "מלאי תקין"
-                            ? "codeGreen"
-                            : item.status === "מלאי נמוך"
-                            ? "codeYellow"
-                            : "codeRed"
-                        }`}
-                      >
-                        {item.itemCode}
-                      </span>
-                    </td>
-                    <td>
-                      {item.details || item.items?.item_name || item.itemName}
-                    </td>
-                    <td>{getStatusBadge(item)}</td>
-                    <td className="stockCell">{item.totalStock}</td>
-                    <td className="detailsCell">{item.details}</td>
+            <div className="overflow-x-auto">
+              <table className="modern-table">
+                <thead>
+                  <tr>
+                    <th>תאריך עדכון</th>
+                    <th>קוד פריט</th>
+                    <th>שם פריט</th>
+                    <th>סטטוס מלאי</th>
+                    <th>סה"כ מלאי</th>
+                    <th>פרטים נוספים</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {inventoryItems.map((item, idx) => (
+                    <tr key={idx} className={isLoading ? "opacity-50" : ""}>
+                      <td>{item.date}</td>
+                      <td>
+                        <span
+                          className={`modern-badge ${
+                            item.status === "מלאי תקין"
+                              ? "modern-badge-success"
+                              : item.status === "מלאי נמוך"
+                              ? "modern-badge-warning"
+                              : "modern-badge-danger"
+                          }`}
+                        >
+                          {item.itemCode}
+                        </span>
+                      </td>
+                      <td>
+                        <strong>
+                          {item.details ||
+                            item.items?.item_name ||
+                            item.itemName}
+                        </strong>
+                      </td>
+                      <td>{getStatusBadge(item)}</td>
+                      <td>
+                        <span className="modern-badge modern-badge-info">
+                          {item.totalStock}
+                        </span>
+                      </td>
+                      <td className="text-secondary-600">{item.details}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-          <div className="inventoryFooter">
-            <span>עדכון אחרון: {new Date().toLocaleString("he-IL")}</span>
+
+          <div
+            className="text-center mt-lg p-md"
+            style={{
+              background: "var(--secondary-50)",
+              borderRadius: "var(--radius-lg)",
+              color: "var(--secondary-600)",
+              fontSize: "0.875rem",
+            }}
+          >
+            עדכון אחרון: {new Date().toLocaleString("he-IL")}
           </div>
         </div>
       </div>
-      <UserReqList userId={null} />
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <ApproveRequests />
+
+      {/* User Requests */}
+      <div className="mb-xl">
+        <UserReqList userId={null} />
+      </div>
+
+      {/* Approve Requests */}
+      <div className="modern-card">
+        <div className="p-xl">
+          <ApproveRequests />
+        </div>
       </div>
     </div>
   );

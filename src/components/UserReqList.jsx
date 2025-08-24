@@ -47,71 +47,97 @@ function UserReqList({ userId, unitId }) {
 
   if (loading)
     return (
-      <Center my="lg">
-        <Loader />
-      </Center>
+      <div className="modern-card p-xl">
+        <div className="modern-loading">
+          <div className="modern-spinner"></div>
+          <span className="ml-md">טוען בקשות...</span>
+        </div>
+      </div>
     );
+
   if (error)
     return (
-      <Text c="red" fw={500}>
-        שגיאה: {error}
-      </Text>
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-danger mb-md">
+            שגיאה בטעינת הבקשות
+          </div>
+          <p>{error}</p>
+        </div>
+      </div>
     );
+
   if (!requests || requests.length === 0) {
-    return <Text c="dimmed" ta="right">אין בקשות להצגה</Text>;
+    return (
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-info mb-md">
+            אין בקשות להצגה
+          </div>
+        </div>
+      </div>
+    );
   }
+
   return (
     <>
-      <Card withBorder radius="md" p="md" mt="xl">
-        <Title
-          order={2}
-          mb="sm"
-          style={{ textAlign: "right", fontSize: 32, fontWeight: 800 }}
-        >
-          הבקשות שלי
-        </Title>
-        <Table
-          striped
-          highlightOnHover
-          withColumnBorders
-          style={{ direction: "rtl", textAlign: "right", fontSize: 16 }}
-        >
-          <thead>
-            <tr>
-              <th style={{ textAlign: "right", padding: "8px 16px" }}>פריט</th>
-              <th style={{ textAlign: "right", padding: "8px 16px" }}>כמות</th>
-              <th style={{ textAlign: "right", padding: "8px 16px" }}>סטטוס</th>
-              <th style={{ textAlign: "right", padding: "8px 16px" }}>תאריך</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req.id}>
-                <td
-                  style={{
-                    textAlign: "right",
-                    padding: "8px 16px",
-                    fontWeight: 500,
-                  }}
-                >
-                  {req.items?.item_name || req.item_id}
-                </td>
-                <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                  {req.quantity}
-                </td>
-                <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                  {translateStatus(req.status)}
-                </td>
-                <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                  {req.created_at
-                    ? new Date(req.created_at).toLocaleDateString("he-IL")
-                    : ""}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Card>
+      <div className="modern-card mb-xl">
+        <div className="p-xl">
+          <div className="modern-nav mb-lg">
+            <h2>הבקשות שלי</h2>
+            <div className="modern-badge modern-badge-info">
+              {requests.length} בקשות
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="modern-table">
+              <thead>
+                <tr>
+                  <th>פריט</th>
+                  <th>כמות</th>
+                  <th>סטטוס</th>
+                  <th>תאריך</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requests.map((req) => (
+                  <tr key={req.id}>
+                    <td>
+                      <strong>{req.items?.item_name || req.item_id}</strong>
+                    </td>
+                    <td>
+                      <span className="modern-badge modern-badge-info">
+                        {req.quantity}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className={`modern-badge ${
+                          req.status === "pending"
+                            ? "modern-badge-warning"
+                            : req.status === "approved"
+                            ? "modern-badge-success"
+                            : req.status === "rejected"
+                            ? "modern-badge-danger"
+                            : "modern-badge-info"
+                        }`}
+                      >
+                        {translateStatus(req.status)}
+                      </span>
+                    </td>
+                    <td>
+                      {req.created_at
+                        ? new Date(req.created_at).toLocaleDateString("he-IL")
+                        : ""}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
       <UserInventory unitId={unitId} />
     </>
   );

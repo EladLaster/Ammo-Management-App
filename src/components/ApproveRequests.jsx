@@ -113,12 +113,12 @@ export default function ApproveRequests() {
           }
         } else {
           // צור רשומה חדשה
-          console.log("Requset: ")
+          console.log("Requset: ");
           console.log(req);
           const { error: insertError } = await supabase
             .from("inventory_users")
             .insert({
-              user_id : req.user_id,
+              user_id: req.user_id,
               unit_id: req.unit_id,
               item_id: req.item_id,
               quantity: req.quantity,
@@ -160,90 +160,116 @@ export default function ApproveRequests() {
 
   if (loading)
     return (
-      <Center my="lg">
-        <Loader />
-      </Center>
+      <div className="modern-card p-xl">
+        <div className="modern-loading">
+          <div className="modern-spinner"></div>
+          <span className="ml-md">טוען בקשות ממתינות...</span>
+        </div>
+      </div>
     );
+
   if (error)
     return (
-      <Text c="red" fw={500}>
-        שגיאה: {error}
-      </Text>
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-danger mb-md">
+            שגיאה בטעינת הבקשות
+          </div>
+          <p>{error}</p>
+        </div>
+      </div>
     );
+
   if (!requests || requests.length === 0) {
-    return <Text c="dimmed" ta="right" >אין בקשות ממתינות לאישור</Text>;
+    return (
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-info mb-md">
+            אין בקשות ממתינות לאישור
+          </div>
+        </div>
+      </div>
+    );
   }
+
   return (
-    <Card withBorder radius="md" p="md" mt="xl">
-      <Title order={3} mb="sm" style={{ textAlign: "right" }}>
-        בקשות ממתינות לאישור
-      </Title>
-      <Table
-        striped
-        highlightOnHover
-        withColumnBorders
-        style={{ direction: "rtl", textAlign: "right", fontSize: 16 }}
-      >
-        <thead>
-          <tr>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>משתמש</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>פריט</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>כמות</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>סטטוס</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>תאריך</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>פעולות</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests.map((req) => (
-            <tr key={req.id}>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {req.users?.name || req.user_id}
-              </td>
-              <td
-                style={{
-                  textAlign: "right",
-                  padding: "8px 16px",
-                  fontWeight: 500,
-                }}
-              >
-                {req.items?.item_name || req.item_id}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {req.quantity}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {translateStatus(req.status)}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {req.created_at
-                  ? new Date(req.created_at).toLocaleDateString("he-IL")
-                  : ""}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                <Group gap={4}>
-                  <Button
-                    size="xs"
-                    color="green"
-                    loading={actionLoading[req.id]}
-                    onClick={() => handleAction(req.id, "approved")}
-                  >
-                    אשר
-                  </Button>
-                  <Button
-                    size="xs"
-                    color="red"
-                    loading={actionLoading[req.id]}
-                    onClick={() => handleAction(req.id, "rejected")}
-                  >
-                    דחה
-                  </Button>
-                </Group>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Card>
+    <div className="modern-card">
+      <div className="p-xl">
+        <div className="modern-nav mb-lg">
+          <h2>בקשות ממתינות לאישור</h2>
+          <div className="modern-badge modern-badge-warning">
+            {requests.length} בקשות ממתינות
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="modern-table">
+            <thead>
+              <tr>
+                <th>משתמש</th>
+                <th>פריט</th>
+                <th>כמות</th>
+                <th>סטטוס</th>
+                <th>תאריך</th>
+                <th>פעולות</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((req) => (
+                <tr key={req.id}>
+                  <td>
+                    <strong>{req.users?.name || req.user_id}</strong>
+                  </td>
+                  <td>
+                    <strong>{req.items?.item_name || req.item_id}</strong>
+                  </td>
+                  <td>
+                    <span className="modern-badge modern-badge-info">
+                      {req.quantity}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="modern-badge modern-badge-warning">
+                      {translateStatus(req.status)}
+                    </span>
+                  </td>
+                  <td>
+                    {req.created_at
+                      ? new Date(req.created_at).toLocaleDateString("he-IL")
+                      : ""}
+                  </td>
+                  <td>
+                    <div className="flex gap-sm">
+                      <button
+                        className="modern-btn modern-btn-success"
+                        style={{
+                          fontSize: "0.75rem",
+                          padding: "var(--space-xs) var(--space-sm)",
+                        }}
+                        disabled={actionLoading[req.id]}
+                        onClick={() => handleAction(req.id, "approved")}
+                      >
+                        {actionLoading[req.id] ? "⏳" : "✅"} אשר
+                      </button>
+                      <button
+                        className="modern-btn modern-btn-danger"
+                        style={{
+                          fontSize: "0.75rem",
+                          padding: "var(--space-xs) var(--space-sm)",
+                        }}
+                        disabled={actionLoading[req.id]}
+                        onClick={() => handleAction(req.id, "rejected")}
+                      >
+                        {actionLoading[req.id] ? "⏳" : "❌"} דחה
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }

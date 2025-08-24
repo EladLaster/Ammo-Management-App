@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
-import "./HomePageAdmin.css";
 import { authProvider } from "../../AuthProvider/AuthProvider";
 import UserReqList from "../components/UserReqList";
 import UnitWeatherContainer from "../components/API's/UnitWeatherContainer";
@@ -23,15 +22,15 @@ export const HomePageUser = observer(() => {
 
   const getStatusBadge = (item) => {
     const statusConfig = {
-      "מלאי תקין": { class: "statusGreen", icon: "🛡️" },
-      "מלאי נמוך": { class: "statusYellow", icon: "⚡" },
-      "מלאי קריטי": { class: "statusRed", icon: "❌" },
+      "מלאי תקין": { class: "modern-badge-success", icon: "🛡️" },
+      "מלאי נמוך": { class: "modern-badge-warning", icon: "⚡" },
+      "מלאי קריטי": { class: "modern-badge-danger", icon: "❌" },
     };
 
     const config = statusConfig[item.status] || statusConfig["מלאי תקין"];
 
     return (
-      <span className={`inventoryStatusBadge ${config.class}`}>
+      <span className={`modern-badge ${config.class}`}>
         {item.statusIcon} {item.status}
       </span>
     );
@@ -45,14 +44,23 @@ export const HomePageUser = observer(() => {
     navigate("/");
     return null;
   }
+
   if (error) {
     return (
-      <div className="statusContainer">
-        <div className="errorMessage">
-          שגיאה בטעינת הנתונים: {error}
-          <button onClick={handleRefresh} className="refreshBtn">
-            נסה שוב
-          </button>
+      <div className="modern-container">
+        <div className="modern-card p-xl">
+          <div className="text-center">
+            <div className="modern-badge modern-badge-danger mb-md">
+              שגיאה בטעינת הנתונים
+            </div>
+            <p className="mb-lg">{error}</p>
+            <button
+              onClick={handleRefresh}
+              className="modern-btn modern-btn-primary"
+            >
+              נסה שוב
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -98,75 +106,87 @@ export const HomePageUser = observer(() => {
   }
 
   return (
-    <>
-      <UnitWeatherContainer />
-      <div className="pageTitle" style={{ gap: 0 }}>
-        <button
-          className="requestsButton"
-          style={{
-            right: "20px",
-            left: "unset",
-            background: "white",
-            color: "#764ba2",
-          }}
-          onClick={() => {
-            navigate("/form");
-          }}
-        >
-          בקשה חדשה
-        </button>
-        <h1>
-          דף הבית (משתמש){" "}
-          <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
-            {authProvider.activeUser.name}
-          </span>
-        </h1>
-        <button
-          className="requestsButton"
-          style={{
-            left: "20px",
-            right: "unset",
-            background: "#e74c3c",
-            color: "white",
-          }}
-          onClick={async () => {
-            await authProvider.handleLogout();
-            navigate("/");
-          }}
-        >
-          התנתק
-        </button>
+    <div className="modern-container">
+      {/* Weather Widget */}
+      <div className="mb-xl">
+        <UnitWeatherContainer />
       </div>
-      <div className="statusContainer">
-        <div className="statusTitle">
-          סקירה כללית של מצב המלאי ופעילויות אחרונות
-          {isLoading && <span className="loadingSpinner">⏳ טוען...</span>}
-        </div>
-        <div className="boxContainer">
-          <div className="box">
-            <span className="boxNumber">{s.ammoTypes}</span>
-            <div className="boxLabel">סוגי תחמושות</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{s.unitsInStock.toLocaleString()}</span>
-            <div className="boxLabel">יחידות במלאי</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{s.lowStockItems}</span>
-            <div className="boxLabel">פריטים במלאי נמוך</div>
-          </div>
-          <div className="box">
-            <span className="boxNumber">{userPendingRequests}</span>
-            <div className="boxLabel">בקשות ממתינות</div>
-          </div>
-        </div>
 
-        <div className="inventoryReportContainer">
-          <div className="inventoryReportHeader">
-            <h3>דו"ח מלאי</h3>
+      {/* Header */}
+      <div className="modern-header">
+        <div className="modern-nav">
+          <div>
+            <h1>דף הבית - משתמש</h1>
+            <p>ברוך הבא, {authProvider.activeUser.name}</p>
+          </div>
+          <div className="modern-nav-actions">
+            <button
+              className="modern-btn modern-btn-primary"
+              onClick={() => navigate("/form")}
+            >
+              ➕ בקשה חדשה
+            </button>
+            <button
+              className="modern-btn modern-btn-danger"
+              onClick={async () => {
+                await authProvider.handleLogout();
+                navigate("/");
+              }}
+            >
+              🚪 התנתק
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="modern-grid modern-grid-4 mb-xl">
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--military-green)" }}
+          >
+            {s.ammoTypes}
+          </span>
+          <div className="modern-stats-label">סוגי תחמושות</div>
+        </div>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--success-600)" }}
+          >
+            {s.unitsInStock.toLocaleString()}
+          </span>
+          <div className="modern-stats-label">יחידות במלאי</div>
+        </div>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--warning-600)" }}
+          >
+            {s.lowStockItems}
+          </span>
+          <div className="modern-stats-label">פריטים במלאי נמוך</div>
+        </div>
+        <div className="modern-stats-card">
+          <span
+            className="modern-stats-number"
+            style={{ color: "var(--danger-600)" }}
+          >
+            {userPendingRequests}
+          </span>
+          <div className="modern-stats-label">בקשות ממתינות</div>
+        </div>
+      </div>
+
+      {/* Inventory Report */}
+      <div className="modern-card mb-xl">
+        <div className="p-xl">
+          <div className="modern-nav mb-lg">
+            <h2>דו"ח מלאי</h2>
             <button
               onClick={handleRefresh}
-              className="refreshBtn"
+              className="modern-btn modern-btn-secondary"
               disabled={isLoading}
             >
               {isLoading ? "⏳" : "🔄"} רענן
@@ -174,121 +194,147 @@ export const HomePageUser = observer(() => {
           </div>
 
           {inventoryItems.length === 0 && !isLoading ? (
-            <div className="noDataMessage">אין נתונים להצגה</div>
-          ) : (
-            <table className="inventoryReportTable">
-              <thead>
-                <tr>
-                  <th>תאריך עדכון</th>
-                  <th>קוד פריט</th>
-                  <th>שם פריט</th>
-                  <th>סטטוס מלאי</th>
-                  <th>כמות זמינה</th>
-                  <th>סה"כ מלאי</th>
-                  <th>פרטים נוספים</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inventoryItems.map((item, idx) => {
-                  console.log("item.details:", item.details);
-                  return (
-                    <tr key={idx} className={isLoading ? "loading-row" : ""}>
-                      <td>{item.date}</td>
-                      <td>
-                        <span
-                          className={`itemCode ${
-                            item.status === "מלאי תקין"
-                              ? "codeGreen"
-                              : item.status === "מלאי נמוך"
-                              ? "codeYellow"
-                              : "codeRed"
-                          }`}
-                        >
-                          {item.itemCode}
-                        </span>
-                      </td>
-                      <td>
-                        {item.details || item.items?.item_name || item.itemName}
-                      </td>
-                      <td>{getStatusBadge(item)}</td>
-                      <td className="quantityCell">{item.quantity}</td>
-                      <td className="stockCell">{item.totalStock}</td>
-                      <td className="detailsCell">
-                        {item.details && (
-                          <button
-                            className="wikiDetailsBtn"
-                            style={{
-                              cursor: "pointer",
-                              color: "#764ba2",
-                              background: "none",
-                              border: "none",
-                              textDecoration: "underline",
-                            }}
-                            onClick={() => fetchWikiDescription(item.details)}
-                          >
-                            מידע
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-
-          <div className="inventoryFooter">
-            <span>עדכון אחרון: {new Date().toLocaleString("he-IL")}</span>
-          </div>
-
-          {/* Wiki Modal */}
-          {modalOpen && (
-            <div
-              className="wikiModalBg"
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0,0,0,0.3)",
-                zIndex: 1000,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                className="wikiModal"
-                style={{
-                  background: "white",
-                  padding: 24,
-                  borderRadius: 8,
-                  maxWidth: 500,
-                  minWidth: 300,
-                }}
-              >
-                <h2 style={{ marginTop: 0 }}>{modalTitle}</h2>
-                {wikiLoading ? (
-                  <div>טוען מידע מוויקיפדיה...</div>
-                ) : wikiError ? (
-                  <div style={{ color: "red" }}>{wikiError}</div>
-                ) : (
-                  <div style={{ whiteSpace: "pre-line" }}>{wikiDesc}</div>
-                )}
-                <button
-                  style={{ marginTop: 16 }}
-                  onClick={() => setModalOpen(false)}
-                >
-                  סגור
-                </button>
+            <div className="text-center p-xl">
+              <div className="modern-badge modern-badge-info mb-md">
+                אין נתונים להצגה
               </div>
             </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="modern-table">
+                <thead>
+                  <tr>
+                    <th>תאריך עדכון</th>
+                    <th>קוד פריט</th>
+                    <th>שם פריט</th>
+                    <th>סטטוס מלאי</th>
+                    <th>כמות זמינה</th>
+                    <th>סה"כ מלאי</th>
+                    <th>פרטים נוספים</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventoryItems.map((item, idx) => {
+                    console.log("item.details:", item.details);
+                    return (
+                      <tr key={idx} className={isLoading ? "opacity-50" : ""}>
+                        <td>{item.date}</td>
+                        <td>
+                          <span
+                            className={`modern-badge ${
+                              item.status === "מלאי תקין"
+                                ? "modern-badge-success"
+                                : item.status === "מלאי נמוך"
+                                ? "modern-badge-warning"
+                                : "modern-badge-danger"
+                            }`}
+                          >
+                            {item.itemCode}
+                          </span>
+                        </td>
+                        <td>
+                          <strong>
+                            {item.details ||
+                              item.items?.item_name ||
+                              item.itemName}
+                          </strong>
+                        </td>
+                        <td>{getStatusBadge(item)}</td>
+                        <td>
+                          <span className="modern-badge modern-badge-info">
+                            {item.quantity}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="modern-badge modern-badge-info">
+                            {item.totalStock}
+                          </span>
+                        </td>
+                        <td>
+                          {item.details && (
+                            <button
+                              className="modern-btn modern-btn-secondary"
+                              style={{
+                                fontSize: "0.75rem",
+                                padding: "var(--space-xs) var(--space-sm)",
+                              }}
+                              onClick={() => fetchWikiDescription(item.details)}
+                            >
+                              📖 מידע
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
+
+          <div
+            className="text-center mt-lg p-md"
+            style={{
+              background: "var(--secondary-50)",
+              borderRadius: "var(--radius-lg)",
+              color: "var(--secondary-600)",
+              fontSize: "0.875rem",
+            }}
+          >
+            עדכון אחרון: {new Date().toLocaleString("he-IL")}
+          </div>
         </div>
       </div>
-      {/* רשימת הבקשות שלי */}
-      <UserReqList userId={userId} />
-    </>
+
+      {/* User Requests */}
+      <div className="mb-xl">
+        <UserReqList userId={userId} />
+      </div>
+
+      {/* Wiki Modal */}
+      {modalOpen && (
+        <div
+          className="modern-modal-overlay"
+          onClick={() => setModalOpen(false)}
+        >
+          <div className="modern-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modern-modal-header">
+              <h3>{modalTitle}</h3>
+              <button
+                className="modern-btn modern-btn-secondary"
+                onClick={() => setModalOpen(false)}
+                style={{ fontSize: "1.5rem", padding: "var(--space-xs)" }}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modern-modal-body">
+              {wikiLoading ? (
+                <div className="modern-loading">
+                  <div className="modern-spinner"></div>
+                  <span className="ml-md">טוען מידע מוויקיפדיה...</span>
+                </div>
+              ) : wikiError ? (
+                <div className="modern-badge modern-badge-danger">
+                  {wikiError}
+                </div>
+              ) : (
+                <div style={{ whiteSpace: "pre-line", lineHeight: 1.6 }}>
+                  {wikiDesc}
+                </div>
+              )}
+            </div>
+            <div className="modern-modal-footer">
+              <button
+                className="modern-btn modern-btn-primary"
+                onClick={() => setModalOpen(false)}
+              >
+                סגור
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 });

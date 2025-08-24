@@ -22,11 +22,7 @@ import { notifications } from "@mantine/notifications";
 import { dbProvider } from "../../DBProvider/DBProvider";
 
 // אייקונים
-import {
-  IconBox,
-  IconCalendar,
-  IconClipboard,
-} from "@tabler/icons-react";
+import { IconBox, IconCalendar, IconClipboard } from "@tabler/icons-react";
 
 const FormPage = observer(() => {
   const navigate = useNavigate();
@@ -120,112 +116,182 @@ const FormPage = observer(() => {
   };
 
   return (
-    <Center style={{ minHeight: "100vh" }}>
-      <Paper shadow="md" radius="lg" p="xl" withBorder dir="rtl" style={{ backgroundColor: "#e6d7ba",position: "relative" }}>
-        <Button
-  size="xs"
-  variant="filled"
-  color="red"
-  styles={(theme) => ({
-    root: {
-      position: "absolute",
-      top: 10,
-      right: 10,
-      minWidth: "40px",
-      padding: "0 6px",
-      fontWeight: 600,
-      "&:hover": {
-        backgroundColor: "red",
-      },
-    },
-  })}
-  onClick={() => navigate("/home-user")}
->
-  ✕
-</Button>
+    <div className="modern-container min-h-screen flex items-center justify-center">
+      <div className="modern-card" style={{ width: "100%", maxWidth: 600 }}>
+        <div className="p-xl">
+          {/* Header */}
+          <div className="modern-header text-center mb-xl">
+            <h1>הגשת בקשה חדשה</h1>
+            <p>מלא את הפרטים להעברת בקשה לתחמושות</p>
+          </div>
 
-        <Title order={2} ta="center" mb="md" styles={{backgroundColor: "rgb(62, 68, 32)"}}>
-          הגשת בקשה חדשה
-        </Title>
-        <Divider my="sm" />
+          {/* Close Button */}
+          <button
+            className="modern-btn modern-btn-danger"
+            style={{
+              position: "absolute",
+              top: "var(--space-lg)",
+              right: "var(--space-lg)",
+              minWidth: "40px",
+              padding: "var(--space-xs)",
+              fontSize: "1.2rem",
+            }}
+            onClick={() => navigate("/home-user")}
+          >
+            ✕
+          </button>
 
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack spacing="md">
-            <Select
-              label="סוג הבקשה"
-              placeholder="בחר סוג בקשה"
-              data={["נשק", "תחמושת", "ציוד"]}
-              leftSection={<IconBox size={16} />}
-              {...form.getInputProps("requestType")}
-            />
+          {/* Form */}
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Stack gap="lg">
+              <div className="modern-grid modern-grid-2">
+                <Select
+                  label="סוג הבקשה"
+                  placeholder="בחר סוג בקשה"
+                  data={["נשק", "תחמושת", "ציוד"]}
+                  leftSection={<IconBox size={16} />}
+                  {...form.getInputProps("requestType")}
+                  radius="lg"
+                  size="md"
+                  styles={{
+                    input: {
+                      borderColor: "var(--secondary-300)",
+                      "&:focus": {
+                        borderColor: "var(--primary-500)",
+                        boxShadow: "0 0 0 3px var(--primary-100)",
+                      },
+                    },
+                  }}
+                />
 
-            <Select
-              label="סוג התחמושות"
-              placeholder="בחר סוג תחמושת"
-              data={dbProvider.armorTypes}
-              leftSection={<IconBox size={16} />}
-              {...form.getInputProps("usageType")}
-            />
+                <Select
+                  label="סוג התחמושות"
+                  placeholder="בחר סוג תחמושת"
+                  data={dbProvider.armorTypes}
+                  leftSection={<IconBox size={16} />}
+                  {...form.getInputProps("usageType")}
+                  radius="lg"
+                  size="md"
+                  styles={{
+                    input: {
+                      borderColor: "var(--secondary-300)",
+                      "&:focus": {
+                        borderColor: "var(--primary-500)",
+                        boxShadow: "0 0 0 3px var(--primary-100)",
+                      },
+                    },
+                  }}
+                />
+              </div>
 
-            <Group grow>
-              <NumberInput
-                label="כמות"
-                placeholder="לדוגמה: 100"
-                min={1}
-                {...form.getInputProps("quantity")}
+              <div className="modern-grid modern-grid-2">
+                <NumberInput
+                  label="כמות"
+                  placeholder="לדוגמה: 100"
+                  min={1}
+                  {...form.getInputProps("quantity")}
+                  radius="lg"
+                  size="md"
+                  styles={{
+                    input: {
+                      borderColor: "var(--secondary-300)",
+                      "&:focus": {
+                        borderColor: "var(--primary-500)",
+                        boxShadow: "0 0 0 3px var(--primary-100)",
+                      },
+                    },
+                  }}
+                />
+
+                <DateInput
+                  label="תאריך דרוש"
+                  placeholder="בחר תאריך"
+                  valueFormat="DD/MM/YYYY"
+                  locale="he"
+                  leftSection={<IconCalendar size={16} />}
+                  {...form.getInputProps("usageDate")}
+                  radius="lg"
+                  size="md"
+                  styles={{
+                    input: {
+                      borderColor: "var(--secondary-300)",
+                      "&:focus": {
+                        borderColor: "var(--primary-500)",
+                        boxShadow: "0 0 0 3px var(--primary-100)",
+                      },
+                    },
+                  }}
+                />
+              </div>
+
+              <div
+                className="modern-card p-lg"
+                style={{ background: "var(--secondary-50)" }}
+              >
+                <Radio.Group
+                  label="דרגת עדיפות"
+                  {...form.getInputProps("priority")}
+                  color="var(--military-green)"
+                >
+                  <div className="modern-grid modern-grid-4 mt-sm">
+                    <Radio value="low" label="נמוכה" />
+                    <Radio value="medium" label="בינונית" />
+                    <Radio value="high" label="גבוהה" />
+                    <Radio value="urgent" label="דחוף" />
+                  </div>
+                </Radio.Group>
+              </div>
+
+              <Textarea
+                label="הצדקה לבקשה"
+                placeholder="לדוגמה: נדרש 100 פצמ"
+                autosize
+                minRows={3}
+                leftSection={<IconClipboard size={16} />}
+                {...form.getInputProps("justification")}
+                radius="lg"
+                size="md"
+                styles={{
+                  input: {
+                    borderColor: "var(--secondary-300)",
+                    "&:focus": {
+                      borderColor: "var(--primary-500)",
+                      boxShadow: "0 0 0 3px var(--primary-100)",
+                    },
+                  },
+                }}
               />
 
-              <DateInput
-                label="תאריך דרוש"
-                placeholder="בחר תאריך"
-                valueFormat="DD/MM/YYYY"
-                locale="he"
-                leftSection={<IconCalendar size={16} />}
-                {...form.getInputProps("usageDate")}
-              />
-            </Group>
-
-            <Radio.Group label="דרגת עדיפות" {...form.getInputProps("priority")} color="rgb(62, 68, 32)" >
-              <Group mt="xs">
-                <Radio value="low" label="נמוכה" />
-                <Radio value="medium" label="בינונית" />
-                <Radio value="high" label="גבוהה" />
-                <Radio value="urgent" label="דחוף" />
-              </Group>
-            </Radio.Group>
-
-            <Textarea
-              label="הצדקה לבקשה"
-              placeholder="לדוגמה: נדרש 100 פצמ"
-              autosize
-              minRows={3}
-              leftSection={<IconClipboard size={16} />}
-              {...form.getInputProps("justification")}
-            />
-
-            <Button
-              type="submit"
-              color="blue"
-              size="md"
-              fullWidth
-              leftSection={<IconClipboard />}
-              styles={(theme) => ({
-              root: {
-                backgroundColor: "rgb(62, 68, 32)",
-                color: "white",
-                fontWeight: 600,
-                "&:hover": {
-                  backgroundColor: "rgb(50, 55, 28)",
-                },
-              },
-            })}
-            >
-              שלח בקשה
-            </Button>
-          </Stack>
-        </form>
-      </Paper>
-    </Center>
+              <Button
+                type="submit"
+                size="lg"
+                fullWidth
+                leftSection={<IconClipboard />}
+                className="modern-btn modern-btn-primary"
+                styles={{
+                  root: {
+                    background:
+                      "linear-gradient(135deg, var(--military-green) 0%, var(--military-dark) 100%)",
+                    color: "white",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    padding: "var(--space-md) var(--space-xl)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, var(--military-dark) 0%, var(--primary-800) 100%)",
+                      transform: "translateY(-1px)",
+                      boxShadow: "var(--shadow-md)",
+                    },
+                  },
+                }}
+              >
+                שלח בקשה
+              </Button>
+            </Stack>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 });
 

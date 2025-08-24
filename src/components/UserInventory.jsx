@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card, Title, Table, Loader, Text, Center } from "@mantine/core";
 import { supabase } from "../../data/supabase";
 
 function UserInventory({ unitId }) {
@@ -34,64 +33,80 @@ function UserInventory({ unitId }) {
 
   if (loading)
     return (
-      <Center my="lg">
-        <Loader />
-      </Center>
+      <div className="modern-card p-xl">
+        <div className="modern-loading">
+          <div className="modern-spinner"></div>
+          <span className="ml-md">טוען מלאי...</span>
+        </div>
+      </div>
     );
+
   if (error)
     return (
-      <Text c="red" fw={500}>
-        שגיאה: {error}
-      </Text>
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-danger mb-md">
+            שגיאה בטעינת המלאי
+          </div>
+          <p>{error}</p>
+        </div>
+      </div>
     );
+
   if (!inventory || inventory.length === 0) {
-    return <Text c="dimmed">אין מלאי להצגה</Text>;
+    return (
+      <div className="modern-card p-xl">
+        <div className="text-center">
+          <div className="modern-badge modern-badge-info mb-md">
+            אין מלאי להצגה
+          </div>
+        </div>
+      </div>
+    );
   }
+
   return (
-    <Card withBorder radius="md" p="md" mt="xl">
-      <Title
-        order={2}
-        mb="sm"
-        style={{ textAlign: "right", fontSize: 28, fontWeight: 700 }}
-      >
-        המלאי של היחידה שלי
-      </Title>
-      <Table
-        striped
-        highlightOnHover
-        withColumnBorders
-        style={{ direction: "rtl", textAlign: "right", fontSize: 16 }}
-      >
-        <thead>
-          <tr>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>פריט</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>קטגוריה</th>
-            <th style={{ textAlign: "right", padding: "8px 16px" }}>כמות</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventory.map((inv) => (
-            <tr key={inv.item_id}>
-              <td
-                style={{
-                  textAlign: "right",
-                  padding: "8px 16px",
-                  fontWeight: 500,
-                }}
-              >
-                {inv.items?.item_name || inv.item_id}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {inv.items?.category || ""}
-              </td>
-              <td style={{ textAlign: "right", padding: "8px 16px" }}>
-                {inv.quantity}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Card>
+    <div className="modern-card">
+      <div className="p-xl">
+        <div className="modern-nav mb-lg">
+          <h2>המלאי של היחידה שלי</h2>
+          <div className="modern-badge modern-badge-info">
+            {inventory.length} פריטים
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="modern-table">
+            <thead>
+              <tr>
+                <th>פריט</th>
+                <th>קטגוריה</th>
+                <th>כמות</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inventory.map((inv) => (
+                <tr key={inv.item_id}>
+                  <td>
+                    <strong>{inv.items?.item_name || inv.item_id}</strong>
+                  </td>
+                  <td>
+                    <span className="modern-badge modern-badge-info">
+                      {inv.items?.category || ""}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="modern-badge modern-badge-success">
+                      {inv.quantity}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }
 
