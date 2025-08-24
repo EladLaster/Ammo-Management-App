@@ -4,8 +4,10 @@ import ApproveRequests from "../components/ApproveRequests";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
 import { authProvider } from "../../AuthProvider/AuthProvider";
+import { supabase } from "../../data/supabase";
+import { dbProvider } from "../../DBProvider/DBProvider";
 
 export const HomePageAdmin = observer(() => {
   const s = requestStore.status;
@@ -13,6 +15,18 @@ export const HomePageAdmin = observer(() => {
   const isLoading = requestStore.isLoading;
   const error = requestStore.error;
   const navigate = useNavigate();
+
+  const [addRow, setAddRow] = useState({
+    itemType: "תחמושת", // ברירת מחדל
+    usageType: "",
+    quantity: "",
+  });
+  const [addLoading, setAddLoading] = useState(false);
+
+  // טען סוגי פריטים לפי סוג נבחר
+  useEffect(() => {
+    dbProvider.loadArmorTypes(addRow.itemType);
+  }, [addRow.itemType]);
 
   useEffect(() => {
     requestStore.refreshData();
@@ -31,6 +45,51 @@ export const HomePageAdmin = observer(() => {
       </span>
     );
   };
+
+  const handleAddRow = async () => {
+  if (!addRow.usageType || !addRow.quantity) return;
+  setAddLoading(true);
+  try {
+    const itemId = await dbProvider.fetchArmorIdByName(addRow.usageType);
+    if (!itemId) throw new Error("סוג פריט לא נמצא");
+
+    const unitId = authProvider.activeUser?.unit_id;
+    if (!unitId) throw new Error("לא נמצא מזהה יחידה");
+
+    // שלוף אם כבר קיימת רשומה
+    const { data: existing, error: fetchError } = await supabase
+      .from("inventory_admins")
+      .select("quantity")
+      .eq("unit_id", unitId)
+      .eq("item_id", itemId)
+      .maybeSingle();
+    if (fetchError) throw fetchError;
+
+    const newQuantity = existing ? existing.quantity + Number(addRow.quantity) : Number(addRow.quantity);
+
+    const { error } = await supabase
+      .from("inventory_admins")
+      .upsert(
+        {
+          unit_id: unitId,
+          item_id: itemId,
+          quantity: newQuantity,
+          last_updated: new Date().toISOString(),
+        },
+        { onConflict: ["unit_id", "item_id"] }
+      );
+    if (error) throw error;
+
+    setAddRow({ itemType: addRow.itemType, usageType: "", quantity: "" });
+    requestStore.refreshData();
+  } catch (e) {
+    alert("שגיאה בהוספה: " + (e.message || e));
+  } finally {
+    setAddLoading(false);
+  }
+};
+
+
 
   const handleRefresh = () => {
     requestStore.refreshData();
@@ -157,10 +216,55 @@ export const HomePageAdmin = observer(() => {
                   <tr>
                     <th>תאריך עדכון</th>
                     <th>קוד פריט</th>
-                    <th>שם פריט</th>
+                    <th>סוג ושם פריט</th>
                     <th>סטטוס מלאי</th>
                     <th>סה"כ מלאי</th>
                     <th>פרטים נוספים</th>
+                  </tr>
+                  <tr>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>
+                      <select
+                        value={addRow.itemType}
+                        onChange={e => setAddRow({ ...addRow, itemType: e.target.value, usageType: "" })}
+                        style={{ minWidth: 90, marginLeft: 4 }}
+                      >
+                        <option value="תחמושת">תחמושת</option>
+                        <option value="נשק">נשק</option>
+                        <option value="ציוד">ציוד</option>
+                      </select>
+                      <select
+                        value={addRow.usageType}
+                        onChange={e => setAddRow({ ...addRow, usageType: e.target.value })}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="">בחר סוג תחמושת</option>
+                        {dbProvider.armorTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>—</td>
+                    <td>
+                      <input
+                        type="number"
+                        min={1}
+                        placeholder="כמות"
+                        value={addRow.quantity}
+                        onChange={e => setAddRow({ ...addRow, quantity: e.target.value })}
+                        style={{ width: 70 }}
+                      />
+                    </td>
+                    <td>
+                      <button
+                        className="modern-btn modern-btn-primary"
+                        onClick={handleAddRow}
+                        disabled={addLoading}
+                      >
+                        {addLoading ? "מוסיף..." : "הוסף"}
+                      </button>
+                    </td>
                   </tr>
                 </thead>
                 <tbody>
