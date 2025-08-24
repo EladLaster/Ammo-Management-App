@@ -2,7 +2,7 @@
 // ותעביר אותו ל-UnitWeather
 import UnitWeather from "./UnitWeather";
 import { observer } from "mobx-react-lite";
-import { requestStore } from "./RequestStore";
+import { requestStore } from "../RequestStore";
 
 const UnitWeatherContainer = observer(() => {
   // ננסה למצוא שם עיר מתוך כל הבקשות של המשתמש (location או name)

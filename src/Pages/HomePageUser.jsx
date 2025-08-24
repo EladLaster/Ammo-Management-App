@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { requestStore } from "../components/RequestStore";
 import "./HomePageAdmin.css";
 import { authProvider } from "../../AuthProvider/AuthProvider";
 import UserReqList from "../components/UserReqList";
-import UnitWeatherContainer from "../components/UnitWeatherContainer";
+import UnitWeatherContainer from "../components/API's/UnitWeatherContainer";
 
 export const HomePageUser = observer(() => {
   const s = requestStore.status;
@@ -65,8 +66,39 @@ export const HomePageUser = observer(() => {
       r.requester === authProvider.activeUser.name
   ).length;
 
+  // Wiki description state
+  const [wikiDesc, setWikiDesc] = useState("");
+  const [wikiLoading, setWikiLoading] = useState(false);
+  const [wikiError, setWikiError] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+
+  // Fetch description from Wikipedia API
+  async function fetchWikiDescription(itemName) {
+    setWikiLoading(true);
+    setWikiError("");
+    setWikiDesc("");
+    setModalTitle(itemName);
+    setModalOpen(true);
+    console.log("Wiki API value:", itemName);
+    try {
+      const res = await fetch(
+        `https://he.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+          itemName
+        )}`
+      );
+      if (!res.ok) throw new Error("לא נמצא מידע בוויקיפדיה");
+      const data = await res.json();
+      setWikiDesc(data.extract || "לא נמצא מידע");
+    } catch (e) {
+      setWikiError(e.message || "שגיאה בשליפת מידע");
+    } finally {
+      setWikiLoading(false);
+    }
+  }
+
   return (
-    <div className="homepageAdmin">
+    <>
       <UnitWeatherContainer />
       <div className="pageTitle" style={{ gap: 0 }}>
         <button
@@ -84,7 +116,7 @@ export const HomePageUser = observer(() => {
           בקשה חדשה
         </button>
         <h1>
-           דף הבית (משתמש){" "}
+          דף הבית (משתמש){" "}
           <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
             {authProvider.activeUser.name}
           </span>
@@ -157,7 +189,9 @@ export const HomePageUser = observer(() => {
                 </tr>
               </thead>
               <tbody>
-                {inventoryItems.map((item, idx) => (
+                {inventoryItems.map((item, idx) => {
+                  console.log('item.details:', item.details);
+                  return (
                   <tr key={idx} className={isLoading ? "loading-row" : ""}>
                     <td>{item.date}</td>
                     <td>
@@ -179,9 +213,25 @@ export const HomePageUser = observer(() => {
                     <td>{getStatusBadge(item)}</td>
                     <td className="quantityCell">{item.quantity}</td>
                     <td className="stockCell">{item.totalStock}</td>
-                    <td className="detailsCell">{item.details}</td>
+                    <td className="detailsCell">
+                      {item.details && (
+                        <button
+                          className="wikiDetailsBtn"
+                          style={{
+                            cursor: "pointer",
+                            color: "#764ba2",
+                            background: "none",
+                            border: "none",
+                            textDecoration: "underline",
+                          }}
+                          onClick={() => fetchWikiDescription(item.details)}
+                        >
+                          מידע
+                        </button>
+                      )}
+                    </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
           )}
@@ -189,10 +239,55 @@ export const HomePageUser = observer(() => {
           <div className="inventoryFooter">
             <span>עדכון אחרון: {new Date().toLocaleString("he-IL")}</span>
           </div>
+
+          {/* Wiki Modal */}
+          {modalOpen && (
+            <div
+              className="wikiModalBg"
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0,0,0,0.3)",
+                zIndex: 1000,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                className="wikiModal"
+                style={{
+                  background: "white",
+                  padding: 24,
+                  borderRadius: 8,
+                  maxWidth: 500,
+                  minWidth: 300,
+                }}
+              >
+                <h2 style={{ marginTop: 0 }}>{modalTitle}</h2>
+                {wikiLoading ? (
+                  <div>טוען מידע מוויקיפדיה...</div>
+                ) : wikiError ? (
+                  <div style={{ color: "red" }}>{wikiError}</div>
+                ) : (
+                  <div style={{ whiteSpace: "pre-line" }}>{wikiDesc}</div>
+                )}
+                <button
+                  style={{ marginTop: 16 }}
+                  onClick={() => setModalOpen(false)}
+                >
+                  סגור
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {/* רשימת הבקשות שלי */}
       <UserReqList userId={userId} />
-    </div>
+    </>
   );
 });
