@@ -15,7 +15,6 @@ export const RequestsPageAdmin = observer(() => {
       if (activeUser?.unit_id) {
         setIsLoading(true);
         try {
-          // טעינת בקשות ליחידה של המשתמש המחובר
           await requestStore.loadRequestsByUnit(activeUser.unit_id);
         } catch (error) {
           console.error("Error loading unit requests:", error);
@@ -28,7 +27,6 @@ export const RequestsPageAdmin = observer(() => {
     loadUserRequests();
   }, [activeUser?.unit_id]);
 
-  // סינון לפי סוג תחמושת בלבד
   const filtered = requestStore.requests.filter(
     (r) =>
       r.requester.includes(search) ||

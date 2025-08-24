@@ -6,10 +6,7 @@ import {
   Select,
   Stack,
   Textarea,
-  Center,
-  Paper,
-  Title,
-  Divider,
+
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -21,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import { dbProvider } from "../../DBProvider/DBProvider";
 
-// אייקונים
 import { IconBox, IconCalendar, IconClipboard } from "@tabler/icons-react";
 
 const FormPage = observer(() => {
@@ -135,8 +131,8 @@ const FormPage = observer(() => {
               minWidth: "40px",
               padding: "var(--space-xs)",
               fontSize: "1.2rem",
-              transition: "all 0.2s ease", // מוסיף אנימציה חלקה
-              backgroundColor: "var(--danger-500)", // צבע בסיסי
+              transition: "all 0.2s ease", 
+              backgroundColor: "var(--danger-500)", 
               color: "white",
               borderRadius: "4px",
             }}
@@ -150,7 +146,7 @@ const FormPage = observer(() => {
               e.currentTarget.style.transform = "scale(1)";
             }}
           >
-            ✕
+            x
           </button>
 
 
@@ -202,13 +198,13 @@ const FormPage = observer(() => {
                   label="כמות"
                   placeholder="לדוגמה: 100"
                   min={1}
-                  value={form.values.quantity || undefined} // במקום 0
+                  value={form.values.quantity || undefined}
                   {...form.getInputProps("quantity")}
                   radius="lg"
                   size="md"
                   styles={{
                     input: {
-                      textAlign: "right", // מציג מספרים מימין
+                      textAlign: "right", 
                       borderColor: "var(--secondary-300)",
                       "&:focus": {
                         borderColor: "var(--primary-500)",

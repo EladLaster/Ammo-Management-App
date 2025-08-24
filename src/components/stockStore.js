@@ -16,7 +16,6 @@ class StockStore {
   async fetchInventory(role, unitId = null) {
      const roleName = role === "Admin" ? "admins" : "users";
 
-  // build the select list conditionally
   const selectList = `
     unit_id,
     ${roleName === "users" ? "user_id," : ""}
@@ -32,14 +31,11 @@ class StockStore {
     )
   `;
 
-  // declare once, assign inside
   let query = supabase.from(`inventory_${roleName}`).select(selectList);
 
-  // always filter by unit
   const unit = unitId ?? authProvider.activeUser.unit_id;
   query = query.eq("unit_id", unit);
 
-  // only users table has user_id
   if (roleName === "users") {
     query = query.eq("user_id", authProvider.activeUser.id);
   }

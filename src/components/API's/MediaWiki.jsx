@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 /**
- * MediaWiki component fetches Wikipedia summary for a given title.
  * @param {Object} props
- * @param {string} props.title - The Wikipedia page title to fetch.
+ * @param {string} props.title
  */
 function MediaWiki({ title }) {
   const [data, setData] = useState(null);

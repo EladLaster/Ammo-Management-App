@@ -1,15 +1,5 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../data/supabase";
-import {
-  Button,
-  Table,
-  Card,
-  Title,
-  Loader,
-  Text,
-  Center,
-  Group,
-} from "@mantine/core";
 
 function translateStatus(status) {
   const statusMap = {
@@ -53,10 +43,8 @@ export default function ApproveRequests() {
   async function handleAction(id, newStatus) {
     setActionLoading((prev) => ({ ...prev, [id]: true }));
     try {
-      // שלוף את הבקשה הרלוונטית
       const req = requests.find((r) => r.id === id);
 
-      // אם מאושר - בדוק קודם מלאי, ורק אם יש מספיק - עדכן סטטוס והעבר למלאי
       if (newStatus === "approved" && req) {
         console.log("[ApproveRequests] Approving request:", req);
         if (!req.unit_id || !req.item_id || !req.quantity) {
@@ -65,7 +53,6 @@ export default function ApproveRequests() {
           );
           return;
         }
-        // בדוק אם יש מספיק מלאי ליחידה ב-inventory_admins
         const { data: adminInv, error: adminInvError } = await supabase
           .from("inventory_admins")
           .select("quantity")
@@ -80,13 +67,11 @@ export default function ApproveRequests() {
           alert("אין מספיק מלאי לאישור הבקשה (inventory_admins)");
           return;
         }
-        // יש מספיק מלאי - עדכן סטטוס הבקשה ל-approved
         const { error: reqError } = await supabase
           .from("requests")
           .update({ status: newStatus, last_updated: new Date().toISOString() })
           .eq("id", id);
         if (reqError) throw reqError;
-        // עדכן/הוסף ל-inventory_users
         const { data: invRows, error: invError } = await supabase
           .from("inventory_users")
           .select("quantity")
@@ -98,7 +83,6 @@ export default function ApproveRequests() {
           throw invError;
         }
         if (invRows) {
-          // עדכן כמות קיימת
           const { error: updateError } = await supabase
             .from("inventory_users")
             .update({
@@ -112,7 +96,6 @@ export default function ApproveRequests() {
             throw updateError;
           }
         } else {
-          // צור רשומה חדשה
           console.log("Requset: ");
           console.log(req);
           const { error: insertError } = await supabase
@@ -129,7 +112,6 @@ export default function ApproveRequests() {
             throw insertError;
           }
         }
-        // עדכן את המלאי של האדמין (הפחתה)
         const { error: adminUpdateError } = await supabase
           .from("inventory_admins")
           .update({
@@ -143,7 +125,6 @@ export default function ApproveRequests() {
           throw adminUpdateError;
         }
       } else {
-        // לא מאושר - עדכן סטטוס בלבד
         const { error: reqError } = await supabase
           .from("requests")
           .update({ status: newStatus, last_updated: new Date().toISOString() })

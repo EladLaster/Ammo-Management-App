@@ -21,7 +21,6 @@ class RequestStore {
     makeAutoObservable(this);
     this.currentUser = authProvider.getActiveUser();
     this.loadData();
-    // לא טוען בקשות אוטומטית כאן - רק בקומפוננטות ספציפיות
   }
 
   // ========== פונקציות API ========== //
@@ -50,7 +49,6 @@ class RequestStore {
       )
     `);
 
-    // סינון לפי unit_id אם נדרש
     if (unitId) {
       query = query.eq("unit_id", unitId);
     }
@@ -158,7 +156,6 @@ class RequestStore {
         status: this.translateStatus(req.status),
         originalStatus: req.status,
         unitLocation: req.units?.location,
-        // שמירת המידע המקורי לצורך עדכונים
         rawData: req,
       }));
       this.updateStatus();
@@ -303,7 +300,6 @@ class RequestStore {
   async updateRequestStatusLocal(requestId, newStatus) {
     try {
       await this.updateRequestStatus(requestId, newStatus);
-      // עדכון מקומי
       const request = this.requests.find((r) => r.id === requestId);
       if (request) {
         request.originalStatus = newStatus;
@@ -406,12 +402,10 @@ class RequestStore {
     await Promise.all([this.loadData(), this.loadRequests()]);
   }
 
-  // Reset error state
   clearError() {
     this.error = null;
   }
 
-  // Get requests summary for dashboard
   get requestsSummary() {
     const summary = {
       total: this.requests.length,

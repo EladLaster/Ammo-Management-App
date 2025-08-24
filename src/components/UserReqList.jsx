@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card, Title, Table, Loader, Text, Center } from "@mantine/core";
 import { supabase } from "../../data/supabase";
 import UserInventory from "./UserInventory";
 

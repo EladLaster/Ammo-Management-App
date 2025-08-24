@@ -14,10 +14,8 @@ export const HomePageUser = observer(() => {
   const error = requestStore.error;
   const navigate = useNavigate();
 
-  // טען נתוני מלאי אוטומטית בטעינת הדף
   useEffect(() => {
     requestStore.refreshData();
-    // eslint-disable-next-line
   }, []);
 
   const getStatusBadge = (item) => {
@@ -67,21 +65,18 @@ export const HomePageUser = observer(() => {
   }
 
   const userId = authProvider.activeUser?.id;
-  // חישוב בקשות ממתינות של המשתמש הנוכחי בלבד
   const userPendingRequests = requestStore.requests.filter(
     (r) =>
       r.originalStatus === "pending" &&
       r.requester === authProvider.activeUser.name
   ).length;
 
-  // Wiki description state
   const [wikiDesc, setWikiDesc] = useState("");
   const [wikiLoading, setWikiLoading] = useState(false);
   const [wikiError, setWikiError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
 
-  // Fetch description from Wikipedia API
   async function fetchWikiDescription(itemName) {
     setWikiLoading(true);
     setWikiError("");
@@ -124,7 +119,7 @@ export const HomePageUser = observer(() => {
               className="modern-btn modern-btn-primary"
               onClick={() => navigate("/form")}
             >
-              ➕ בקשה חדשה
+              + בקשה חדשה
             </button>
             <button
               className="modern-btn modern-btn-danger"
@@ -293,7 +288,7 @@ export const HomePageUser = observer(() => {
                 onClick={() => setModalOpen(false)}
                 style={{ fontSize: "1.5rem", padding: "var(--space-xs)" }}
               >
-                ✕
+                x
               </button>
             </div>
             <div className="modern-modal-body">

@@ -16,7 +16,7 @@ function App() {
 
         {/* דפים למשתמש אדמין */}
         <Route path="/home-admin" element={<HomePageAdmin />} />
-        <Route path="/requests-admin" element={<RequestsPageAdmin />} />
+        {/* <Route path="/requests-admin" element={<RequestsPageAdmin />} /> */}
 
         {/* דפים למשתמש רגיל */}
         <Route path="/home-user" element={<HomePageUser />} />

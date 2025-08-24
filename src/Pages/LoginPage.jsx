@@ -1,10 +1,6 @@
 import {
   Anchor,
   Button,
-  Flex,
-  Divider,
-  Group,
-  Paper,
   PasswordInput,
   Stack,
   Text,
@@ -140,12 +136,6 @@ const LoginPage = observer(() => {
               מערכת צה"ל לניהול מלאי
             </Text>
           </div>
-
-          {/* Header */}
-          {/* <div className="modern-header text-center mb-xl">
-            <h1>{type === "login" ? "התחברות למערכת" : "הרשמה למערכת"}</h1>
-            <p>ברוכים הבאים למערכת ניהול התחמושות המתקדמת</p>
-          </div> */}
 
           {/* Form */}
           <form onSubmit={form.onSubmit(handleSubmit)}>

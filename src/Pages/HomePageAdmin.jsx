@@ -17,13 +17,12 @@ export const HomePageAdmin = observer(() => {
   const navigate = useNavigate();
 
   const [addRow, setAddRow] = useState({
-    itemType: "תחמושת", // ברירת מחדל
+    itemType: "תחמושת",
     usageType: "",
     quantity: "",
   });
   const [addLoading, setAddLoading] = useState(false);
 
-  // טען סוגי פריטים לפי סוג נבחר
   useEffect(() => {
     dbProvider.loadArmorTypes(addRow.itemType);
   }, [addRow.itemType]);
@@ -56,7 +55,6 @@ export const HomePageAdmin = observer(() => {
     const unitId = authProvider.activeUser?.unit_id;
     if (!unitId) throw new Error("לא נמצא מזהה יחידה");
 
-    // שלוף אם כבר קיימת רשומה
     const { data: existing, error: fetchError } = await supabase
       .from("inventory_admins")
       .select("quantity")

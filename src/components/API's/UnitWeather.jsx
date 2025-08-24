@@ -75,7 +75,7 @@ export default function UnitWeather({ city }) {
       right: 0,
       zIndex: 1000,
       marginTop: "var(--space-sm)",
-      width: "220px", // רוחב קצר
+      width: "220px",
       boxShadow: "var(--shadow-xl)",
       border: "1px solid var(--warning-300)",
       padding: "0.5rem",
