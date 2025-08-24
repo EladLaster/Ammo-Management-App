@@ -58,7 +58,7 @@ function UserReqList({ userId, unitId }) {
       </Text>
     );
   if (!requests || requests.length === 0) {
-    return <Text c="dimmed">אין בקשות להצגה</Text>;
+    return <Text c="dimmed" ta="right">אין בקשות להצגה</Text>;
   }
   return (
     <>

@@ -130,7 +130,6 @@ export const HomePageAdmin = observer(() => {
                   <th>קוד פריט</th>
                   <th>שם פריט</th>
                   <th>סטטוס מלאי</th>
-                  <th>כמות זמינה</th>
                   <th>סה"כ מלאי</th>
                   <th>פרטים נוספים</th>
                 </tr>
@@ -156,7 +155,6 @@ export const HomePageAdmin = observer(() => {
                       {item.details || item.items?.item_name || item.itemName}
                     </td>
                     <td>{getStatusBadge(item)}</td>
-                    <td className="quantityCell">{item.quantity}</td>
                     <td className="stockCell">{item.totalStock}</td>
                     <td className="detailsCell">{item.details}</td>
                   </tr>

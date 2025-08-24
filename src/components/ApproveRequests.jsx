@@ -171,7 +171,7 @@ export default function ApproveRequests() {
       </Text>
     );
   if (!requests || requests.length === 0) {
-    return <Text c="dimmed">אין בקשות ממתינות לאישור</Text>;
+    return <Text c="dimmed" ta="right" >אין בקשות ממתינות לאישור</Text>;
   }
   return (
     <Card withBorder radius="md" p="md" mt="xl">
