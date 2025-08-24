@@ -54,15 +54,7 @@ function UserInventory({ unitId }) {
     );
 
   if (!inventory || inventory.length === 0) {
-    return (
-      <div className="modern-card p-xl">
-        <div className="text-center">
-          <div className="modern-badge modern-badge-info mb-md">
-            אין מלאי להצגה
-          </div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

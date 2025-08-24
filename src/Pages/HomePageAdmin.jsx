@@ -150,13 +150,7 @@ export const HomePageAdmin = observer(() => {
             </button>
           </div>
 
-          {inventoryItems.length === 0 && !isLoading ? (
-            <div className="text-center p-xl">
-              <div className="modern-badge modern-badge-info mb-md">
-                אין נתונים להצגה
-              </div>
-            </div>
-          ) : (
+          {inventoryItems.length > 0 && (
             <div className="overflow-x-auto">
               <table className="modern-table">
                 <thead>

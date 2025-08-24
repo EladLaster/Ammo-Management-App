@@ -193,13 +193,7 @@ export const HomePageUser = observer(() => {
             </button>
           </div>
 
-          {inventoryItems.length === 0 && !isLoading ? (
-            <div className="text-center p-xl">
-              <div className="modern-badge modern-badge-info mb-md">
-                אין נתונים להצגה
-              </div>
-            </div>
-          ) : (
+          {inventoryItems.length > 0 && (
             <div className="overflow-x-auto">
               <table className="modern-table">
                 <thead>
@@ -208,8 +202,7 @@ export const HomePageUser = observer(() => {
                     <th>קוד פריט</th>
                     <th>שם פריט</th>
                     <th>סטטוס מלאי</th>
-                    <th>כמות זמינה</th>
-                    <th>סה"כ מלאי</th>
+                    <th>כמות</th>
                     <th>פרטים נוספים</th>
                   </tr>
                 </thead>
@@ -242,12 +235,7 @@ export const HomePageUser = observer(() => {
                         <td>{getStatusBadge(item)}</td>
                         <td>
                           <span className="modern-badge modern-badge-info">
-                            {item.quantity}
-                          </span>
-                        </td>
-                        <td>
-                          <span className="modern-badge modern-badge-info">
-                            {item.totalStock}
+                            {item.quantity || item.totalStock}
                           </span>
                         </td>
                         <td>
