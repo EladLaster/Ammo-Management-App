@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { requestStore } from "../components/RequestStore";
+import { requestStore } from "../components/Store's/RequestStore";
 import { authProvider } from "../../AuthProvider/AuthProvider";
-import UserReqList from "../components/UserReqList";
+import UserReqList from "../components/Other's/UserReqList";
 import UnitWeatherContainer from "../components/API's/UnitWeatherContainer";
 
 export const HomePageUser = observer(() => {

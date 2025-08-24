@@ -1,6 +1,6 @@
 import UnitWeather from "./UnitWeather";
 import { observer } from "mobx-react-lite";
-import { requestStore } from "../RequestStore";
+import { requestStore } from "../Store's/RequestStore";
 
 const UnitWeatherContainer = observer(() => {
   let city = null;

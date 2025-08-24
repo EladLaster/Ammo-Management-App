@@ -1,8 +1,8 @@
 // src/stores/RequestStore.js
 import { makeAutoObservable, runInAction } from "mobx";
 import { stockStore } from "./stockStore";
-import { supabase } from "../../data/supabase";
-import { authProvider } from "../../AuthProvider/AuthProvider";
+import { supabase } from "../../../data/supabase";
+import { authProvider } from "../../../AuthProvider/AuthProvider";
 
 class RequestStore {
   requests = [];

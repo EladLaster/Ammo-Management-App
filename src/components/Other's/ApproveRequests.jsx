@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../data/supabase";
+import { supabase } from "../../../data/supabase";
 
 function translateStatus(status) {
   const statusMap = {

@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { supabase } from '../../data/supabase';
-import { authProvider } from "../../AuthProvider/AuthProvider";
+import { supabase } from '../../../data/supabase';
+import { authProvider } from "../../../AuthProvider/AuthProvider";
 
 class StockStore {
   inventory = [];
