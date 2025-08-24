@@ -58,6 +58,12 @@ export const HomePageAdmin = observer(() => {
     <div className="homepageAdmin">
       <UnitWeatherContainer />
       <div className="pageTitle" style={{ gap: 0 }}>
+        {/* <button style={{
+            right: "20px",
+            left: "unset",
+          }}
+          onClick={()=>navigate("/requests-admin")}
+          >בקשות ממתינות</button> */}
         <h1>
           דף הבית (מנהל){" "}
           <span style={{ fontWeight: 400, fontSize: 20, color: "#e0e0e0" }}>
@@ -163,9 +169,7 @@ export const HomePageAdmin = observer(() => {
           </div>
         </div>
       </div>
-      {/* רשימת כל הבקשות */}
       <UserReqList userId={null} />
-      {/* בקשות ממתינות לאישור */}
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <ApproveRequests />
       </div>
